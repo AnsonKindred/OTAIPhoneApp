@@ -1,0 +1,296 @@
+//
+//  VideoEntryViewController.m
+//  OffTheApp
+//
+//  Created by Zeb Long on 11/11/12.
+//  Copyright (c) 2012 North Avenue Studios. All rights reserved.
+//
+
+#import "OTAVideoEntryViewController.h"
+#import "OTAYouTube.h"
+#import "OTAComment.h"
+#import "OTAGlobals.h"
+
+@implementation OTAVideoEntryViewController
+@synthesize entry;
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    queue = [[NSOperationQueue alloc] init];
+    
+    [self.navigationController setNavigationBarHidden:false animated:true];
+    entry.videoUrl = [entry.videoUrl stringByReplacingOccurrencesOfString:@"watch?v=" withString:@"embed/"];
+    self.title = entry.title;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(youTubeVideoExit:)
+                                                 name:@"UIMoviePlayerControllerDidExitFullscreenNotification"
+                                               object:nil];
+    
+    infoLabelView.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"labelBackground.png"]];
+    commentLabelView.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"labelBackground.png"]];
+    
+    descriptionLabel.text = entry.description;
+    
+    [self correctLayout];
+    
+    if(entry.youtubeVideoID != @"")
+    {
+        [self fetchComments];
+    }
+    else
+    {
+        [commentLabelView setHidden:true];
+        [commentTable setHidden:true];
+        [commentTextField setHidden:true];
+        likeButton.enabled = false;
+        dislikeButton.enabled = false;
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(OTAYouTube.canAuthorize && entry.youtubeVideoID != @"")
+    {
+        [OTAYouTube authenticateThen:@selector(checkIfVideoLiked:auth:error:) delegate:self viewController:self];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    NSString* videoHTML = [NSString stringWithFormat:@"\
+                           <html>\
+                           <head>\
+                           <style type=\"text/css\">\
+                           body {background-color:#000; margin:0;}\
+                           </style>\
+                           </head>\
+                           <body>\
+                           <iframe width=\"100%%\" height=\"180px\" src=\"%@\" frameborder=\"0\" allowfullscreen></iframe>\
+                           </body>\
+                           </html>", entry.videoUrl];
+    [videoWebView loadHTMLString:videoHTML baseURL:nil];
+}
+
+- (void)fetchComments
+{
+    NSLog(@"Fetching comments");
+    NSString* urlString = [[@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID] stringByAppendingString:@"/comments?v=2"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(displayComments:)];
+    
+    [queue addOperation:request];
+}
+
+- (void)displayComments:(ASIHTTPRequest *)request
+{
+    [queue addOperationWithBlock:^{
+		
+        NSError *error;
+        NSData* responseData = [request responseData];
+        GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:responseData
+                                                               options:0
+                                                                 error:&error];
+        if (doc == nil)
+        {
+            descriptionLabel.text = @"failed to parse";
+        }
+        else
+        {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                NSArray *comments = [doc.rootElement elementsForName:@"entry"];
+                int i = 0;
+                for (GDataXMLElement *comment in comments)
+                {
+                    NSString* commentText   = [comment valueForChild:@"content"];
+                    NSString* commentAuthor = [[comment elementForChild:@"author"] valueForChild:@"name"];
+                    
+                    [self addComment:commentText withAuthor:commentAuthor atIndex:i];
+                    
+                    i++;
+                }
+                [self correctLayout];
+            }];
+        }
+    }];
+	
+}
+
+- (void)addComment:(NSString*)commentText
+        withAuthor:(NSString*)author
+           atIndex:(int)index
+{
+    [commentTableController.comments insertObject:[[OTAComment alloc] init:commentText author:author] atIndex:index];
+    
+    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    NSArray* indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:index inSection:0]];
+    [commentTable insertRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+    
+    UITableViewCell* cell = [commentTableController tableView:commentTable cellForRowAtIndexPath:indexPath];
+    CGSize size = [commentText sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(cell.frame.size.width - 20, 500)];
+    commentTableController.totalRowHeight += size.height+35;
+}
+
+- (void)correctLayout
+{
+    [descriptionLabel setFrame:CGRectMake(descriptionLabel.frame.origin.x, descriptionLabel.frame.origin.y, commentTextField.frame.size.width, descriptionLabel.frame.size.height)];
+    // Fit description label to text size
+    [descriptionLabel sizeToFit];
+    
+    // Make sure the "Comments" title sits just beneath the description text
+    [commentLabelView setFrame:CGRectMake(0.0, descriptionLabel.frame.origin.y+descriptionLabel.frame.size.height+8, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
+    
+    // Make sure the comment text field sits just beneath the "Comments" title
+    [commentTextField setFrame:CGRectMake(commentTextField.frame.origin.x, commentLabelView.frame.origin.y + commentLabelView.frame.size.height+10, commentTextField.frame.size.width, commentTextField.frame.size.height)];
+    
+    // Make sure the comment list sits just below the comment text field and is just tall enough to fit the content
+    CGRect tempFrame = commentTable.frame;
+    float rowHeight = commentTableController.totalRowHeight;
+    tempFrame.origin.y = commentTextField.frame.origin.y + commentTextField.frame.size.height;
+    tempFrame.size.height = rowHeight;
+    [commentTable setFrame:tempFrame];
+    
+    // Set the scroll view's content height to just past the last element (in this case the table view)
+    [scrollView setContentSize:CGSizeMake(scrollView.frame.size.width, tempFrame.origin.y + tempFrame.size.height)];
+}
+
+
+- (void)youTubeVideoExit:(id)sender
+{
+    [[UIApplication sharedApplication] setStatusBarOrientation:UIDeviceOrientationPortrait animated:NO];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(void)checkIfVideoLiked:(GTMOAuth2ViewControllerTouch *)viewController
+                    auth:(GTMOAuth2Authentication *)auth
+                   error:(NSError *)error
+{
+    NSLog(@"Check if video liked");
+    OTAGlobals* globals = [OTAGlobals getInstance];
+    GTLServiceYouTube *service = OTAYouTube.youTubeService;
+    GTLQueryYouTube *query2 = [GTLQueryYouTube queryForPlaylistItemsListWithPart:@"contentDetails"];
+    query2.playlistId = globals.likePlaylistID;
+    query2.videoId = entry.youtubeVideoID;
+    query2.maxResults = 1;
+    [service executeQuery:query2 completionHandler:^(GTLServiceTicket *ticket2, GTLYouTubePlaylistItemListResponse *videoList, NSError *error2)
+    {
+        if([[videoList items] count] > 0)
+        {
+            likeButton.enabled = false;
+        }
+    }];
+}
+
+-(IBAction)likeVideo:(id)sender
+{
+    NSLog(@"like video");
+    [OTAYouTube authenticateThen: @selector(likeVideoAuthenticated:auth:error:) delegate:self viewController:self];
+}
+
+- (IBAction)dislikeVideo:(id)sender
+{
+    [OTAYouTube authenticateThen: @selector(dislikeVideoAuthenticated:auth:error:) delegate:self viewController:self];
+}
+
+-(IBAction)addComment:(id)sender
+{
+    [OTAYouTube authenticateThen: @selector(addCommentAuthenticated:auth:error:) delegate:self viewController:self];
+}
+
+- (IBAction)startEditingComment:(id)sender
+{
+    [scrollView setContentOffset:CGPointMake(0, commentLabelView.frame.origin.y) animated:YES];
+}
+
+-(void)addCommentAuthenticated:(GTMOAuth2ViewControllerTouch *)viewController
+                         auth:(GTMOAuth2Authentication *)auth
+                        error:(NSError *)error
+{
+    OTAGlobals* globals = [OTAGlobals getInstance];
+    GDataServiceGoogleYouTube* service = OTAYouTube.youTubeServiceGData;
+    
+    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID];
+    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
+    {
+        GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
+        NSLog(@"%@", videoEntry.comment.feedLink.URL);
+        GDataEntryYouTubeComment *newCommentEntry = [GDataEntryYouTubeComment commentEntry];
+        [newCommentEntry setContentWithString:commentTextField.text];
+        [service fetchEntryByInsertingEntry:newCommentEntry forFeedURL:videoEntry.comment.feedLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
+        {
+            if (error == nil)
+            {
+                [self addComment:commentTextField.text withAuthor:globals.username atIndex:0];
+                commentTextField.text = @"";
+                [self correctLayout];
+            }
+            else
+            {
+                NSLog(@"%@", error.description);
+            }
+        }];
+    }];
+}
+
+-(void)dislikeVideoAuthenticated:(GTMOAuth2ViewControllerTouch *)viewController
+                            auth:(GTMOAuth2Authentication *)auth
+                           error:(NSError *)error
+{
+    NSLog(@"Dislike video authenticated");
+    GDataServiceGoogleYouTube* service = OTAYouTube.youTubeServiceGData;
+    
+    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID];
+    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
+    {
+         GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
+         NSLog(@"%@", videoEntry.ratingsLink);
+         GDataEntryYouTubeRating *newRating = [GDataEntryYouTubeRating ratingEntryWithValue:@"dislike"];
+         [service fetchEntryByInsertingEntry:newRating forFeedURL:videoEntry.ratingsLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
+         {
+              if (error == nil)
+              {
+                  likeButton.enabled = true;
+                  dislikeButton.enabled = false;
+              }
+              else
+              {
+                  NSLog(@"%@", error.description);
+              }
+         }];
+    }];
+}
+
+-(void)likeVideoAuthenticated:(GTMOAuth2ViewControllerTouch *)viewController
+                         auth:(GTMOAuth2Authentication *)auth
+                        error:(NSError *)error
+{
+    NSLog(@"Like video authenticated");
+    OTAGlobals* globals = [OTAGlobals getInstance];
+    GTLYouTubePlaylistItem *playlistItem = [[GTLYouTubePlaylistItem alloc] init];
+    playlistItem.snippet = [[GTLYouTubePlaylistItemSnippet alloc] init];
+    playlistItem.snippet.playlistId = globals.likePlaylistID;
+    playlistItem.snippet.resourceId = [[GTLYouTubeResourceId alloc] init];
+    playlistItem.snippet.resourceId.kind = @"youtube#video";
+    playlistItem.snippet.resourceId.videoId = entry.youtubeVideoID;
+    
+    GTLQueryYouTube *query = [GTLQueryYouTube queryForPlaylistItemsInsertWithObject:playlistItem part:@"snippet"];
+    query.mine = YES;
+    query.maxResults = 1;
+    
+    [OTAYouTube.youTubeService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLYouTubeChannelListResponse *channelList, NSError *error) {}];
+    likeButton.enabled = false;
+    dislikeButton.enabled = true;
+}
+
+
+@end
