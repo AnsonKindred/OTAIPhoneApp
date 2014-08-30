@@ -14,7 +14,6 @@
 @synthesize filteredEntries, savedSearchTerm, savedScopeButtonIndex, searchWasActive;
 @synthesize feed_url;
 
-static NSString *const FEED_TYPE = @"json";
 static const int POSTS_PER_PAGE = 20;
 
 - (void)viewDidLoad
@@ -41,7 +40,7 @@ static const int POSTS_PER_PAGE = 20;
     }
     
     OTAGlobals* global = [OTAGlobals getInstance];
-    feed_url = [global.wordpressDomain stringByAppendingFormat:@"/?feed=%@&posts_per_page=%i", FEED_TYPE, POSTS_PER_PAGE];
+    feed_url = [global.wordpressDomain stringByAppendingFormat:@"getSongs.php?posts_per_page=%i", POSTS_PER_PAGE];
     [feed_url retain];
     
     [self refresh];
@@ -71,6 +70,7 @@ static const int POSTS_PER_PAGE = 20;
 
 - (void)refresh
 {
+    NSLog(@"%i", page);
     NSURL *url = [NSURL URLWithString:[feed_url stringByAppendingFormat:@"&paged=%i", page]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
@@ -93,7 +93,7 @@ static const int POSTS_PER_PAGE = 20;
     if (error)
     {
         /* JSON was malformed, act appropriately here */
-        NSLog(@"ERROR ERROR");
+        NSLog(error.description);
     }
     
     if ([object isKindOfClass:[NSArray class]])

@@ -24,7 +24,7 @@ static OTAGlobals *instance = nil;
         {
             instance= [OTAGlobals new];
             instance.CHANNEL_ID = @"UCJ0MDVTDD_8ryFEleEiZwsw";
-            instance.wordpressDomain = @"http://ota.zebadiah.me";
+            instance.wordpressDomain = @"http://ota.zebadiah.me/services/";
         }
     }
     return instance;
