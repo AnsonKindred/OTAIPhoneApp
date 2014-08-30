@@ -9,17 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "OTAVideoListTableViewController.h"
 #import "OTAVideoEntryViewController.h"
-#import "OTAGlobals.h"
 
 
 @interface OTAVideoListViewController : UIViewController {
     IBOutlet OTAVideoListTableViewController* tableViewController;
-    
-    int lastEntryCount, page;
-    OTAGlobals* global;
 }
 
 @property (atomic, strong) IBOutlet OTAVideoListTableViewController* tableViewController;
-- (void)loadData;
 
 @end

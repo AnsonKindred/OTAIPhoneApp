@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OTARSSEntry.h"
+#import "OTAGlobals.h"
 #import "ASIHTTPRequest.h"
 #import "ASIDownloadCache.h"
 #import "GDataFramework.h"
@@ -20,6 +21,8 @@
     NSOperationQueue* queue;
     NSString* feed_url;
     
+    int lastEntryCount, page;
+    
     // Ideally this would not be necessary but there is something I'm not understanding
     @public
     id parent;
@@ -30,6 +33,7 @@
 
 @property (nonatomic, retain) NSMutableArray* entries;
 @property (nonatomic, retain) NSMutableArray* filteredEntries;
+@property (nonatomic, retain) NSString* feed_url;
 
 @property (nonatomic, copy) NSString* savedSearchTerm;
 @property (nonatomic) NSInteger savedScopeButtonIndex;

@@ -11,20 +11,12 @@
 @implementation OTAVideoListViewController
 @synthesize tableViewController;
 
-static NSString *const FEED_TYPE = @"json";
-static const int POSTS_PER_PAGE = 20;
-
 - (void)viewDidLoad
 {
     [self.navigationController setNavigationBarHidden:false animated:true];
     
     self.title = @"Videos";
     self.tableViewController->parent = self;
-    lastEntryCount = 0;
-    page = 1;
-    global = [OTAGlobals getInstance];
-    
-    [self loadData];
     
     [super viewDidLoad];
 }
@@ -34,21 +26,4 @@ static const int POSTS_PER_PAGE = 20;
     [self.navigationController setNavigationBarHidden:false animated:true];
 }
 
-- (void)requestFinished
-{
-    if([tableViewController.entries count] > lastEntryCount)
-    {
-        page++;
-        lastEntryCount = (int)[tableViewController.entries count];
-        
-        [self loadData];
-    }
-}
-
-- (void)loadData
-{
-    NSString* query = [NSString stringWithFormat:@"%@/?feed=%@&posts_per_page=%i&paged=%i", global.wordpressDomain, FEED_TYPE, POSTS_PER_PAGE, page];
-    
-    [tableViewController refreshWithUrl:query];
-}
 @end

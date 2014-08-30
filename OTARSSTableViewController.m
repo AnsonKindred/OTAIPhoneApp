@@ -12,12 +12,20 @@
 @implementation OTARSSTableViewController
 @synthesize entries;
 @synthesize filteredEntries, savedSearchTerm, savedScopeButtonIndex, searchWasActive;
+@synthesize feed_url;
+
+static NSString *const FEED_TYPE = @"json";
+static const int POSTS_PER_PAGE = 20;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     entries = [[NSMutableArray array] retain];
     queue = [[NSOperationQueue alloc] init];
+    
+    page = 1;
+    lastEntryCount = 0;
     
     // create a filtered list that will contain products for the search results table.
     self.filteredEntries = [NSMutableArray arrayWithCapacity:[self.entries count]];
@@ -31,6 +39,12 @@
         
         self.savedSearchTerm = nil;
     }
+    
+    OTAGlobals* global = [OTAGlobals getInstance];
+    feed_url = [global.wordpressDomain stringByAppendingFormat:@"/?feed=%@&posts_per_page=%i", FEED_TYPE, POSTS_PER_PAGE];
+    [feed_url retain];
+    
+    [self refresh];
     
     //[ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
     //[[ASIDownloadCache sharedCache] setShouldRespectCacheControlHeaders:NO];
@@ -49,13 +63,15 @@
     self.savedScopeButtonIndex = [self.searchDisplayController.searchBar selectedScopeButtonIndex];
 }
 
-- (void)refreshWithUrl:(NSString*)url {
+- (void)refreshWithUrl:(NSString*)url
+{
     feed_url = url;
     [self refresh];
 }
 
-- (void)refresh {
-    NSURL *url = [NSURL URLWithString:feed_url];
+- (void)refresh
+{
+    NSURL *url = [NSURL URLWithString:[feed_url stringByAppendingFormat:@"&paged=%i", page]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
     [request setDelegate:self];
@@ -64,7 +80,8 @@
     [queue addOperation:request];
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)request {
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
     NSData* returnedData = [request responseData];
     
     NSError *error = nil;
@@ -82,17 +99,23 @@
     if ([object isKindOfClass:[NSArray class]])
     {
         NSArray *results = object;
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [self parseFeedJSON:results];
-            if(parent != nil) [parent requestFinished];
-        }];
+        [self parseFeedJSON:results];
+        
+        if(entries.count > lastEntryCount)
+        {
+            page++;
+            lastEntryCount = entries.count;
+            
+            [self refresh];
+        }
+        
+        //if(parent != nil) [parent requestFinished];
     }
     else
     {
         /* there's no guarantee that the outermost object in a JSON packet will be a dictionary; */
         NSLog(@"ERROR ERROR");
     }
-    
     /*[queue addOperationWithBlock:^{
 		
         NSError *error;
