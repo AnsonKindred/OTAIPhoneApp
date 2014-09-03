@@ -25,16 +25,16 @@
     
     __unsafe_unretained OTAArtistViewController *me = self; // OK for iOS 4.x and up
     __unsafe_unretained UIImageView* thumbnail_volatile = thumbnail; // OK for iOS 4.x and up
-    [thumbnail setImageWithURL:[NSURL URLWithString:entry.thumbnail]
-                       success:^(UIImage *image, BOOL cached) {
-                           float ratio = thumbnail_volatile.image.size.height/thumbnail.image.size.width;
-                           CGRect tempFrame = thumbnail_volatile.frame;
-                           tempFrame.size.height = tempFrame.size.width*ratio;
-                           [thumbnail_volatile setFrame:tempFrame];
-                           [me correctLayout];
-                       }
-                       failure:^(NSError *error) {}
-                    ];
+//    [thumbnail setImageWithURL:[NSURL URLWithString:entry.thumbnail]
+//                       success:^(UIImage *image, BOOL cached) {
+//                           float ratio = thumbnail_volatile.image.size.height/thumbnail.image.size.width;
+//                           CGRect tempFrame = thumbnail_volatile.frame;
+//                           tempFrame.size.height = tempFrame.size.width*ratio;
+//                           [thumbnail_volatile setFrame:tempFrame];
+//                           [me correctLayout];
+//                       }
+//                       failure:^(NSError *error) {}
+//                    ];
     
     descriptionLabel.text = entry.description;
     descriptionLabel.text = [descriptionLabel.text stringByReplacingOccurrencesOfString:@"Share on Facebook" withString:@""];
@@ -43,7 +43,7 @@
 	self.navigationItem.title = entry.title;
     
     NSString* urlString = @"http://www.offtheavenue.tv/?feed=rss2&tag=";
-    urlString = [urlString stringByAppendingString:entry.artistTag];
+//    urlString = [urlString stringByAppendingString:entry.artistTag];
     [videosListByArtistViewController refreshWithUrl:urlString];
 }
 

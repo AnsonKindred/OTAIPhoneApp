@@ -43,8 +43,6 @@ static const int POSTS_PER_PAGE = 20;
     feed_url = [global.wordpressDomain stringByAppendingFormat:@"getSongs.php?posts_per_page=%i", POSTS_PER_PAGE];
     [feed_url retain];
     
-    [self refresh];
-    
     //[ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
     //[[ASIDownloadCache sharedCache] setShouldRespectCacheControlHeaders:NO];
 }
@@ -65,6 +63,7 @@ static const int POSTS_PER_PAGE = 20;
 - (void)refreshWithUrl:(NSString*)url
 {
     feed_url = url;
+    [feed_url retain];
     [self refresh];
 }
 
@@ -101,7 +100,7 @@ static const int POSTS_PER_PAGE = 20;
         NSArray *results = object;
         [self parseFeedJSON:results];
         
-        if(entries.count > lastEntryCount)
+        if(isPaginated && entries.count > lastEntryCount)
         {
             page++;
             lastEntryCount = entries.count;
@@ -116,31 +115,6 @@ static const int POSTS_PER_PAGE = 20;
         /* there's no guarantee that the outermost object in a JSON packet will be a dictionary; */
         NSLog(@"ERROR ERROR");
     }
-    /*[queue addOperationWithBlock:^{
-		
-        NSError *error;
-        NSData* responseData = [request responseData];
-        GDataXMLDocument *doc = [[GDataXMLDocument alloc] initWithData:responseData
-                                                               options:0
-                                                                 error:&error];
-        if (doc == nil)
-        {
-            NSLog(@"Failed to parse %@", request.url);
-        }
-        else
-        {
-			
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [self parseFeed:doc.rootElement];
-                if(parent != nil)
-                {
-                    [parent requestFinished];
-                }
-            }];
-			
-        }
-    }];*/
-	
 }
 
 - (void)parseFeedJSON:(NSArray *)items
@@ -303,8 +277,8 @@ static const int POSTS_PER_PAGE = 20;
         entry = [entries objectAtIndex:indexPath.row];
     }
 	
-    cell.textLabel.text = entry.song;
-    cell.detailTextLabel.text = entry.artist;
+    cell.textLabel.text = entry.title;
+    cell.detailTextLabel.text = entry.subTitle;
 	
     return cell;
 }
@@ -341,11 +315,10 @@ static const int POSTS_PER_PAGE = 20;
      */
     for (OTARSSEntry *entry in entries)
     {
-        NSRange range1 = [entry.song rangeOfString:searchText options:NSCaseInsensitiveSearch];
-        NSRange range2 = [entry.artist rangeOfString:searchText options:NSCaseInsensitiveSearch];
-        NSRange range3 = [entry.title rangeOfString:searchText options:NSCaseInsensitiveSearch];
+        NSRange range1 = [entry.title rangeOfString:searchText options:NSCaseInsensitiveSearch];
+        NSRange range2 = [entry.subTitle rangeOfString:searchText options:NSCaseInsensitiveSearch];
         
-        if(range1.location != NSNotFound || range2.location != NSNotFound || range3.location != NSNotFound)
+        if(range1.location != NSNotFound || range2.location != NSNotFound)
         {
             [self.filteredEntries addObject:entry];
         }

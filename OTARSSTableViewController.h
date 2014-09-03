@@ -26,6 +26,7 @@
     // Ideally this would not be necessary but there is something I'm not understanding
     @public
     id parent;
+    bool isPaginated;
 }
 
 - (void)refresh;

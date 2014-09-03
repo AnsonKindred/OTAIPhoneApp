@@ -14,6 +14,7 @@
 #import "GDataXMLElement-Extras.h"
 #import "ASIHTTPRequest.h"
 #import "OTACommentListViewController.h"
+#import "OTAVideosListByArtistViewController.h"
 
 @interface OTAVideoEntryViewController : UIViewController {
     OTARSSEntry* entry;
@@ -23,19 +24,25 @@
     IBOutlet UIBarButtonItem *likeButton;
     IBOutlet UIBarButtonItem *dislikeButton;
     IBOutlet UIScrollView *scrollView;
+    IBOutlet UITableView *videosTable;
     IBOutlet UITableView *commentTable;
     IBOutlet OTACommentListViewController *commentTableController;
+    IBOutlet OTAVideosListByArtistViewController *videosListByArtistViewController;
     
     IBOutlet UITextField *commentTextField;
     IBOutlet UILabel *commentLabel;
     IBOutlet UIView *commentLabelView;
     NSOperationQueue* queue;
+    
+    NSString* videoID;
+    NSString* description;
 }
 
 @property (retain) OTARSSEntry* entry;
+@property (retain, nonatomic) IBOutlet OTAVideosListByArtistViewController *videosListByArtistViewController;
 
 - (void)correctLayout;
-
+- (void) updateVideoView;
 - (IBAction)likeVideo:(id)sender;
 - (IBAction)dislikeVideo:(id)sender;
 - (void)addComment:(NSString*)comment

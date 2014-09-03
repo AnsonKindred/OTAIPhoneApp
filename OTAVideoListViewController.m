@@ -17,6 +17,8 @@
     
     self.title = @"Videos";
     self.tableViewController->parent = self;
+    self.tableViewController->isPaginated = true;
+    [tableViewController refresh];
     
     [super viewDidLoad];
 }

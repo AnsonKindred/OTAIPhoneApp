@@ -12,6 +12,7 @@
 #import "OTAGlobals.h"
 
 @implementation OTAVideoEntryViewController
+@synthesize videosListByArtistViewController=videosListByArtistViewController;
 @synthesize entry;
 
 - (void)viewDidLoad
@@ -20,8 +21,9 @@
     
     queue = [[NSOperationQueue alloc] init];
     
+    videosListByArtistViewController->parent = self;
+    
     [self.navigationController setNavigationBarHidden:false animated:true];
-    entry.videoUrl = [entry.videoUrl stringByReplacingOccurrencesOfString:@"watch?v=" withString:@"embed/"];
     self.title = entry.title;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -32,59 +34,103 @@
     infoLabelView.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"labelBackground.png"]];
     commentLabelView.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"labelBackground.png"]];
     
-    descriptionLabel.text = entry.description;
+    OTAGlobals* global = [OTAGlobals getInstance];
+    NSString* feed_url = [global.wordpressDomain stringByAppendingFormat:@"getSongInfo.php?id=%i", entry.ID];
+    
+    NSURL *url = [NSURL URLWithString:feed_url];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
+    [request setDelegate:self];
+    [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
+    
+    [queue addOperation:request];
+    NSLog([global.wordpressDomain stringByAppendingFormat:@"getSongsByArtist.php?id=%i", entry.artistID ]);
+    [videosListByArtistViewController refreshWithUrl:[global.wordpressDomain stringByAppendingFormat:@"getSongsByArtist.php?id=%i", entry.artistID ]];
     
     [self correctLayout];
     
-    if(entry.youtubeVideoID != @"")
+//    if(entry.youtubeVideoID != @"")
+//    {
+//        [self fetchComments];
+//    }
+//    else
+//    {
+//        [commentLabelView setHidden:true];
+//        [commentTable setHidden:true];
+//        [commentTextField setHidden:true];
+//        likeButton.enabled = false;
+//        dislikeButton.enabled = false;
+//    }
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSData* returnedData = [request responseData];
+    NSLog(@"%@", [[NSString alloc] initWithData:returnedData encoding:NSUTF8StringEncoding]);
+    NSError *error = nil;
+    id object = [NSJSONSerialization
+                 JSONObjectWithData:returnedData
+                 options:0
+                 error:&error];
+    
+    if (error)
     {
-        [self fetchComments];
+        /* JSON was malformed, act appropriately here */
+        NSLog(@"%@", error.description);
+    }
+    
+    if ([object isKindOfClass:[NSDictionary class]])
+    {
+        NSDictionary *result = object;
+        videoID = [result valueForKey:@"videoID"];
+        NSLog(@"VIDEO ID: %@", videoID);
+        [self updateVideoView];
+        descriptionLabel.text = [result valueForKey:@"description"];
+        [self correctLayout];
     }
     else
     {
-        [commentLabelView setHidden:true];
-        [commentTable setHidden:true];
-        [commentTextField setHidden:true];
-        likeButton.enabled = false;
-        dislikeButton.enabled = false;
+        /* there's no guarantee that the outermost object in a JSON packet will be a dictionary; */
+        NSLog(@"ERROR ERROR");
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if(OTAYouTube.canAuthorize && entry.youtubeVideoID != @"")
-    {
-        [OTAYouTube authenticateThen:@selector(checkIfVideoLiked:auth:error:) delegate:self viewController:self];
-    }
+//    if(OTAYouTube.canAuthorize && entry.youtubeVideoID != @"")
+//    {
+//        [OTAYouTube authenticateThen:@selector(checkIfVideoLiked:auth:error:) delegate:self viewController:self];
+//    }
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void) updateVideoView
 {
     NSString* videoHTML = [NSString stringWithFormat:@"\
-                           <html>\
-                           <head>\
-                           <style type=\"text/css\">\
-                           body {background-color:#000; margin:0;}\
-                           </style>\
-                           </head>\
-                           <body>\
-                           <iframe width=\"100%%\" height=\"180px\" src=\"%@\" frameborder=\"0\" allowfullscreen></iframe>\
-                           </body>\
-                           </html>", entry.videoUrl];
+                       <html>\
+                       <head>\
+                       <style type=\"text/css\">\
+                       body {background-color:#000; margin:0;}\
+                       </style>\
+                       </head>\
+                       <body>\
+                       <iframe width=\"100%%\" height=\"180px\" src=\"http://www.youtube.com/embed/%@/?modestbranding=1&controls=2&rel=0&iv_load_policy=3&showinfo=0&autoplay=1&playerapiid=ytplayer&version=3\" frameborder=\"0\" allowfullscreen></iframe>\
+                       </body>\
+                       </html>", videoID];
+    
     [videoWebView loadHTMLString:videoHTML baseURL:nil];
 }
 
 - (void)fetchComments
 {
     NSLog(@"Fetching comments");
-    NSString* urlString = [[@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID] stringByAppendingString:@"/comments?v=2"];
-    NSURL *url = [NSURL URLWithString:urlString];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    
-    [request setDelegate:self];
-    [request setDidFinishSelector:@selector(displayComments:)];
-    
-    [queue addOperation:request];
+//    NSString* urlString = [[@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID] stringByAppendingString:@"/comments?v=2"];
+//    NSURL *url = [NSURL URLWithString:urlString];
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    
+//    [request setDelegate:self];
+//    [request setDidFinishSelector:@selector(displayComments:)];
+//    
+//    [queue addOperation:request];
 }
 
 - (void)displayComments:(ASIHTTPRequest *)request
@@ -142,8 +188,11 @@
     // Fit description label to text size
     [descriptionLabel sizeToFit];
     
+    // Make sure the "Videos" table sits just beneath the description text
+    [videosTable setFrame:CGRectMake(0.0, descriptionLabel.frame.origin.y+descriptionLabel.frame.size.height+8, videosTable.frame.size.width, videosTable.frame.size.height)];
+    
     // Make sure the "Comments" title sits just beneath the description text
-    [commentLabelView setFrame:CGRectMake(0.0, descriptionLabel.frame.origin.y+descriptionLabel.frame.size.height+8, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
+    [commentLabelView setFrame:CGRectMake(0.0, videosTable.frame.origin.y+videosTable.frame.size.height+8, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
     
     // Make sure the comment text field sits just beneath the "Comments" title
     [commentTextField setFrame:CGRectMake(commentTextField.frame.origin.x, commentLabelView.frame.origin.y + commentLabelView.frame.size.height+10, commentTextField.frame.size.width, commentTextField.frame.size.height)];
@@ -176,19 +225,19 @@
                    error:(NSError *)error
 {
     NSLog(@"Check if video liked");
-    OTAGlobals* globals = [OTAGlobals getInstance];
-    GTLServiceYouTube *service = OTAYouTube.youTubeService;
-    GTLQueryYouTube *query2 = [GTLQueryYouTube queryForPlaylistItemsListWithPart:@"contentDetails"];
-    query2.playlistId = globals.likePlaylistID;
-    query2.videoId = entry.youtubeVideoID;
-    query2.maxResults = 1;
-    [service executeQuery:query2 completionHandler:^(GTLServiceTicket *ticket2, GTLYouTubePlaylistItemListResponse *videoList, NSError *error2)
-    {
-        if([[videoList items] count] > 0)
-        {
-            likeButton.enabled = false;
-        }
-    }];
+//    OTAGlobals* globals = [OTAGlobals getInstance];
+//    GTLServiceYouTube *service = OTAYouTube.youTubeService;
+//    GTLQueryYouTube *query2 = [GTLQueryYouTube queryForPlaylistItemsListWithPart:@"contentDetails"];
+//    query2.playlistId = globals.likePlaylistID;
+//    query2.videoId = entry.youtubeVideoID;
+//    query2.maxResults = 1;
+//    [service executeQuery:query2 completionHandler:^(GTLServiceTicket *ticket2, GTLYouTubePlaylistItemListResponse *videoList, NSError *error2)
+//    {
+//        if([[videoList items] count] > 0)
+//        {
+//            likeButton.enabled = false;
+//        }
+//    }];
 }
 
 -(IBAction)likeVideo:(id)sender
@@ -219,27 +268,27 @@
     OTAGlobals* globals = [OTAGlobals getInstance];
     GDataServiceGoogleYouTube* service = OTAYouTube.youTubeServiceGData;
     
-    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID];
-    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
-    {
-        GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
-        NSLog(@"%@", videoEntry.comment.feedLink.URL);
-        GDataEntryYouTubeComment *newCommentEntry = [GDataEntryYouTubeComment commentEntry];
-        [newCommentEntry setContentWithString:commentTextField.text];
-        [service fetchEntryByInsertingEntry:newCommentEntry forFeedURL:videoEntry.comment.feedLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
-        {
-            if (error == nil)
-            {
-                [self addComment:commentTextField.text withAuthor:globals.username atIndex:0];
-                commentTextField.text = @"";
-                [self correctLayout];
-            }
-            else
-            {
-                NSLog(@"%@", error.description);
-            }
-        }];
-    }];
+//    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID];
+//    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
+//    {
+//        GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
+//        NSLog(@"%@", videoEntry.comment.feedLink.URL);
+//        GDataEntryYouTubeComment *newCommentEntry = [GDataEntryYouTubeComment commentEntry];
+//        [newCommentEntry setContentWithString:commentTextField.text];
+//        [service fetchEntryByInsertingEntry:newCommentEntry forFeedURL:videoEntry.comment.feedLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
+//        {
+//            if (error == nil)
+//            {
+//                [self addComment:commentTextField.text withAuthor:globals.username atIndex:0];
+//                commentTextField.text = @"";
+//                [self correctLayout];
+//            }
+//            else
+//            {
+//                NSLog(@"%@", error.description);
+//            }
+//        }];
+//    }];
 }
 
 -(void)dislikeVideoAuthenticated:(GTMOAuth2ViewControllerTouch *)viewController
@@ -249,25 +298,25 @@
     NSLog(@"Dislike video authenticated");
     GDataServiceGoogleYouTube* service = OTAYouTube.youTubeServiceGData;
     
-    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID];
-    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
-    {
-         GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
-         NSLog(@"%@", videoEntry.ratingsLink);
-         GDataEntryYouTubeRating *newRating = [GDataEntryYouTubeRating ratingEntryWithValue:@"dislike"];
-         [service fetchEntryByInsertingEntry:newRating forFeedURL:videoEntry.ratingsLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
-         {
-              if (error == nil)
-              {
-                  likeButton.enabled = true;
-                  dislikeButton.enabled = false;
-              }
-              else
-              {
-                  NSLog(@"%@", error.description);
-              }
-         }];
-    }];
+//    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID];
+//    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
+//    {
+//         GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
+//         NSLog(@"%@", videoEntry.ratingsLink);
+//         GDataEntryYouTubeRating *newRating = [GDataEntryYouTubeRating ratingEntryWithValue:@"dislike"];
+//         [service fetchEntryByInsertingEntry:newRating forFeedURL:videoEntry.ratingsLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
+//         {
+//              if (error == nil)
+//              {
+//                  likeButton.enabled = true;
+//                  dislikeButton.enabled = false;
+//              }
+//              else
+//              {
+//                  NSLog(@"%@", error.description);
+//              }
+//         }];
+//    }];
 }
 
 -(void)likeVideoAuthenticated:(GTMOAuth2ViewControllerTouch *)viewController
@@ -275,21 +324,21 @@
                         error:(NSError *)error
 {
     NSLog(@"Like video authenticated");
-    OTAGlobals* globals = [OTAGlobals getInstance];
-    GTLYouTubePlaylistItem *playlistItem = [[GTLYouTubePlaylistItem alloc] init];
-    playlistItem.snippet = [[GTLYouTubePlaylistItemSnippet alloc] init];
-    playlistItem.snippet.playlistId = globals.likePlaylistID;
-    playlistItem.snippet.resourceId = [[GTLYouTubeResourceId alloc] init];
-    playlistItem.snippet.resourceId.kind = @"youtube#video";
-    playlistItem.snippet.resourceId.videoId = entry.youtubeVideoID;
-    
-    GTLQueryYouTube *query = [GTLQueryYouTube queryForPlaylistItemsInsertWithObject:playlistItem part:@"snippet"];
-    query.mine = YES;
-    query.maxResults = 1;
-    
-    [OTAYouTube.youTubeService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLYouTubeChannelListResponse *channelList, NSError *error) {}];
-    likeButton.enabled = false;
-    dislikeButton.enabled = true;
+//    OTAGlobals* globals = [OTAGlobals getInstance];
+//    GTLYouTubePlaylistItem *playlistItem = [[GTLYouTubePlaylistItem alloc] init];
+//    playlistItem.snippet = [[GTLYouTubePlaylistItemSnippet alloc] init];
+//    playlistItem.snippet.playlistId = globals.likePlaylistID;
+//    playlistItem.snippet.resourceId = [[GTLYouTubeResourceId alloc] init];
+//    playlistItem.snippet.resourceId.kind = @"youtube#video";
+//    playlistItem.snippet.resourceId.videoId = entry.youtubeVideoID;
+//    
+//    GTLQueryYouTube *query = [GTLQueryYouTube queryForPlaylistItemsInsertWithObject:playlistItem part:@"snippet"];
+//    query.mine = YES;
+//    query.maxResults = 1;
+//    
+//    [OTAYouTube.youTubeService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLYouTubeChannelListResponse *channelList, NSError *error) {}];
+//    likeButton.enabled = false;
+//    dislikeButton.enabled = true;
 }
 
 
