@@ -18,7 +18,7 @@
 @implementation OTAVideosListByArtistViewController
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Videos";
+    return @"  Other videos";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -20,6 +20,8 @@ static const int POSTS_PER_PAGE = 20;
 {
     [super viewDidLoad];
     
+    [self.tableView addObserver:self forKeyPath:@"contentSize" options:0 context:NULL];
+    
     entries = [[NSMutableArray array] retain];
     queue = [[NSOperationQueue alloc] init];
     
@@ -45,6 +47,17 @@ static const int POSTS_PER_PAGE = 20;
     
     //[ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
     //[[ASIDownloadCache sharedCache] setShouldRespectCacheControlHeaders:NO];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if([parent respondsToSelector:@selector(correctLayout)])
+    {
+        CGRect frame = self.tableView.frame;
+        frame.size = self.tableView.contentSize;
+        self.tableView.frame = frame;
+        [parent correctLayout];
+    }
 }
 
 - (void)viewDidUnload
@@ -107,8 +120,10 @@ static const int POSTS_PER_PAGE = 20;
             
             [self refresh];
         }
-        
-        //if(parent != nil) [parent requestFinished];
+        else
+        {
+            if([parent respondsToSelector:@selector(tableLoaded)]) [parent tableLoaded];
+        }
     }
     else
     {

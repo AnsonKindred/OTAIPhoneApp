@@ -19,7 +19,7 @@
 @interface OTAVideoEntryViewController : UIViewController {
     OTARSSEntry* entry;
     IBOutlet UIWebView *videoWebView;
-    IBOutlet UILabel *descriptionLabel;
+    IBOutlet UIWebView *descriptionLabel;
     IBOutlet UIView *infoLabelView;
     IBOutlet UIBarButtonItem *likeButton;
     IBOutlet UIBarButtonItem *dislikeButton;
@@ -41,6 +41,8 @@
 @property (retain) OTARSSEntry* entry;
 @property (retain, nonatomic) IBOutlet OTAVideosListByArtistViewController *videosListByArtistViewController;
 
+
+- (void)tableLoaded;
 - (void)correctLayout;
 - (void) updateVideoView;
 - (IBAction)likeVideo:(id)sender;

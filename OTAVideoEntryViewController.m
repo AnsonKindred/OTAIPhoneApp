@@ -45,9 +45,8 @@
     
     [queue addOperation:request];
     NSLog([global.wordpressDomain stringByAppendingFormat:@"getSongsByArtist.php?id=%i", entry.artistID ]);
-    [videosListByArtistViewController refreshWithUrl:[global.wordpressDomain stringByAppendingFormat:@"getSongsByArtist.php?id=%i", entry.artistID ]];
+    [videosListByArtistViewController refreshWithUrl:[global.wordpressDomain stringByAppendingFormat:@"getSongsByArtist.php?artistID=%i&songID=%i", entry.artistID, entry.ID ]];
     
-    [self correctLayout];
     
 //    if(entry.youtubeVideoID != @"")
 //    {
@@ -61,6 +60,40 @@
 //        likeButton.enabled = false;
 //        dislikeButton.enabled = false;
 //    }
+}
+
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    if (navigationType == UIWebViewNavigationTypeLinkClicked)
+    {
+        [[UIApplication sharedApplication] openURL:[request URL]];
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView
+{
+    aWebView.scrollView.scrollEnabled = NO;    // Property available in iOS 5.0 and later
+    CGRect frame = aWebView.frame;
+    
+    frame.size.width = self.view.frame.size.width;       // Your desired width here.
+    frame.size.height = 1;        // Set the height to a small one.
+    
+    aWebView.frame = frame;       // Set webView's Frame, forcing the Layout of its embedded scrollView with current Frame's constraints (Width set above).
+    
+    frame.size.height = aWebView.scrollView.contentSize.height;  // Get the corresponding height from the webView's embedded scrollView.
+    
+    aWebView.frame = frame;       // Set the scrollView contentHeight back to the frame itself.
+    
+    [self correctLayout];
+}
+
+- (void)tableLoaded
+{
+    NSLog(@"table loaded");
+    [self correctLayout];
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
@@ -85,8 +118,16 @@
         videoID = [result valueForKey:@"videoID"];
         NSLog(@"VIDEO ID: %@", videoID);
         [self updateVideoView];
-        descriptionLabel.text = [result valueForKey:@"description"];
-        [self correctLayout];
+        
+        NSString* descriptionHTML = [NSString stringWithFormat:@"<html> \n"
+                                       "<head> \n"
+                                       "<style type=\"text/css\"> \n"
+                                       "body {font-family: \"%@\"; font-size: %@;}\n"
+                                       "</style> \n"
+                                       "</head> \n"
+                                       "<body>%@</body> \n"
+                                       "</html>", [UIFont systemFontOfSize:12].familyName, [NSNumber numberWithInt:12], [result valueForKey:@"description"]];
+        [descriptionLabel loadHTMLString:descriptionHTML baseURL:nil];
     }
     else
     {
@@ -144,7 +185,7 @@
                                                                  error:&error];
         if (doc == nil)
         {
-            descriptionLabel.text = @"failed to parse";
+            [descriptionLabel loadHTMLString:@"failed to parse" baseURL:nil];
         }
         else
         {
@@ -191,8 +232,8 @@
     // Make sure the "Videos" table sits just beneath the description text
     [videosTable setFrame:CGRectMake(0.0, descriptionLabel.frame.origin.y+descriptionLabel.frame.size.height+8, videosTable.frame.size.width, videosTable.frame.size.height)];
     
-    // Make sure the "Comments" title sits just beneath the description text
-    [commentLabelView setFrame:CGRectMake(0.0, videosTable.frame.origin.y+videosTable.frame.size.height+8, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
+    // Make sure the "Comments" title sits just beneath the videos table
+    [commentLabelView setFrame:CGRectMake(0.0, videosTable.frame.origin.y+videosTable.frame.size.height, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
     
     // Make sure the comment text field sits just beneath the "Comments" title
     [commentTextField setFrame:CGRectMake(commentTextField.frame.origin.x, commentLabelView.frame.origin.y + commentLabelView.frame.size.height+10, commentTextField.frame.size.width, commentTextField.frame.size.height)];

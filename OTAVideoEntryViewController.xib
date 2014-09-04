@@ -12,7 +12,7 @@
                 <outlet property="commentTable" destination="282" id="284"/>
                 <outlet property="commentTableController" destination="285" id="292"/>
                 <outlet property="commentTextField" destination="299" id="300"/>
-                <outlet property="descriptionLabel" destination="16" id="48"/>
+                <outlet property="descriptionLabel" destination="1bS-pP-KOI" id="mim-Sb-tkO"/>
                 <outlet property="dislikeButton" destination="304" id="306"/>
                 <outlet property="infoLabelView" destination="274" id="279"/>
                 <outlet property="likeButton" destination="210" id="294"/>
@@ -33,9 +33,10 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
                         <tableView opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="skh-iR-zNJ">
-                            <rect key="frame" x="0.0" y="224" width="321" height="88"/>
+                            <rect key="frame" x="0.0" y="248" width="321" height="64"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <connections>
                                 <outlet property="dataSource" destination="NFh-d8-Z0g" id="1bS-GR-3kc"/>
                                 <outlet property="delegate" destination="NFh-d8-Z0g" id="2f6-xb-Kz4"/>
@@ -47,6 +48,15 @@
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <outlet property="delegate" destination="-1" id="56"/>
+                            </connections>
+                        </webView>
+                        <webView contentMode="scaleToFill" id="1bS-pP-KOI" userLabel="Info">
+                            <rect key="frame" x="0.0" y="195" width="321" height="45"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="xwH-tK-MoL"/>
                             </connections>
                         </webView>
                         <view contentMode="scaleToFill" id="274" userLabel="Info Label View">
@@ -65,13 +75,6 @@
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         </view>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" id="16" userLabel="Info">
-                            <rect key="frame" x="10" y="206" width="300" height="19"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <view contentMode="scaleToFill" id="295" userLabel="Comments Label View">
                             <rect key="frame" x="0.0" y="320" width="320" height="23"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
