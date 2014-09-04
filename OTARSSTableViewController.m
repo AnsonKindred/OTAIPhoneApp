@@ -122,7 +122,7 @@ static const int POSTS_PER_PAGE = 20;
         }
         else
         {
-            if([parent respondsToSelector:@selector(tableLoaded)]) [parent tableLoaded];
+            if([parent respondsToSelector:@selector(correctLayout)]) [parent correctLayout];
         }
     }
     else

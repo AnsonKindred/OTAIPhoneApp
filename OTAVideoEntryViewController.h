@@ -41,8 +41,6 @@
 @property (retain) OTARSSEntry* entry;
 @property (retain, nonatomic) IBOutlet OTAVideosListByArtistViewController *videosListByArtistViewController;
 
-
-- (void)tableLoaded;
 - (void)correctLayout;
 - (void) updateVideoView;
 - (IBAction)likeVideo:(id)sender;

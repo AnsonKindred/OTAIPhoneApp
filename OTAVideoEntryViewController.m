@@ -90,12 +90,6 @@
     [self correctLayout];
 }
 
-- (void)tableLoaded
-{
-    NSLog(@"table loaded");
-    [self correctLayout];
-}
-
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     NSData* returnedData = [request responseData];
@@ -229,11 +223,20 @@
     // Fit description label to text size
     [descriptionLabel sizeToFit];
     
-    // Make sure the "Videos" table sits just beneath the description text
-    [videosTable setFrame:CGRectMake(0.0, descriptionLabel.frame.origin.y+descriptionLabel.frame.size.height+8, videosTable.frame.size.width, videosTable.frame.size.height)];
-    
-    // Make sure the "Comments" title sits just beneath the videos table
-    [commentLabelView setFrame:CGRectMake(0.0, videosTable.frame.origin.y+videosTable.frame.size.height, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
+    if (videosListByArtistViewController.entries.count > 0)
+    {
+        [videosTable setHidden:FALSE];
+        // Make sure the "Videos" table sits just beneath the description text
+        [videosTable setFrame:CGRectMake(0.0, descriptionLabel.frame.origin.y+descriptionLabel.frame.size.height+8, videosTable.frame.size.width, videosTable.frame.size.height)];
+        // Make sure the "Comments" title sits just beneath the videos table
+        [commentLabelView setFrame:CGRectMake(0.0, videosTable.frame.origin.y+videosTable.frame.size.height, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
+    }
+    else
+    {
+        [videosTable setHidden:TRUE];
+        // Make sure the "Comments" title sits just beneath the description
+        [commentLabelView setFrame:CGRectMake(0.0, descriptionLabel.frame.origin.y+descriptionLabel.frame.size.height, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
+    }
     
     // Make sure the comment text field sits just beneath the "Comments" title
     [commentTextField setFrame:CGRectMake(commentTextField.frame.origin.x, commentLabelView.frame.origin.y + commentLabelView.frame.size.height+10, commentTextField.frame.size.width, commentTextField.frame.size.height)];
