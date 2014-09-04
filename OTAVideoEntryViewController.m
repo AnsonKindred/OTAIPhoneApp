@@ -111,6 +111,7 @@
         NSDictionary *result = object;
         videoID = [result valueForKey:@"videoID"];
         NSLog(@"VIDEO ID: %@", videoID);
+        
         [self updateVideoView];
         
         NSString* descriptionHTML = [NSString stringWithFormat:@"<html> \n"
@@ -122,20 +123,17 @@
                                        "<body>%@</body> \n"
                                        "</html>", [UIFont systemFontOfSize:12].familyName, [NSNumber numberWithInt:12], [result valueForKey:@"description"]];
         [descriptionLabel loadHTMLString:descriptionHTML baseURL:nil];
+        
+        if(OTAYouTube.canAuthorize && ![videoID  isEqual: @""])
+        {
+            [OTAYouTube authenticateThen:@selector(checkIfVideoLiked:auth:error:) delegate:self viewController:self];
+        }
     }
     else
     {
         /* there's no guarantee that the outermost object in a JSON packet will be a dictionary; */
         NSLog(@"ERROR ERROR");
     }
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-//    if(OTAYouTube.canAuthorize && entry.youtubeVideoID != @"")
-//    {
-//        [OTAYouTube authenticateThen:@selector(checkIfVideoLiked:auth:error:) delegate:self viewController:self];
-//    }
 }
 
 - (void) updateVideoView
@@ -269,19 +267,27 @@
                    error:(NSError *)error
 {
     NSLog(@"Check if video liked");
-//    OTAGlobals* globals = [OTAGlobals getInstance];
-//    GTLServiceYouTube *service = OTAYouTube.youTubeService;
-//    GTLQueryYouTube *query2 = [GTLQueryYouTube queryForPlaylistItemsListWithPart:@"contentDetails"];
-//    query2.playlistId = globals.likePlaylistID;
-//    query2.videoId = entry.youtubeVideoID;
-//    query2.maxResults = 1;
-//    [service executeQuery:query2 completionHandler:^(GTLServiceTicket *ticket2, GTLYouTubePlaylistItemListResponse *videoList, NSError *error2)
-//    {
-//        if([[videoList items] count] > 0)
-//        {
-//            likeButton.enabled = false;
-//        }
-//    }];
+    OTAGlobals* globals = [OTAGlobals getInstance];
+    GTLServiceYouTube *service = OTAYouTube.youTubeService;
+    service.shouldFetchNextPages = FALSE;
+    GTLQueryYouTube *query2 = [GTLQueryYouTube queryForPlaylistItemsListWithPart:@"contentDetails"];
+    query2.playlistId = globals.likePlaylistID;
+    query2.videoId = videoID;
+    query2.maxResults = 1;
+    
+    [service executeQuery:query2 completionHandler:^(GTLServiceTicket *ticket2, GTLYouTubePlaylistItemListResponse *videoList, NSError *error2)
+    {
+        NSLog(@"done checking video liked");
+        if([[videoList items] count] > 0)
+        {
+            NSLog(@"%@", [[[videoList items] objectAtIndex:0] identifier]);
+            likeButton.enabled = false;
+        }
+        else
+        {
+            likeButton.enabled = true;
+        }
+    }];
 }
 
 -(IBAction)likeVideo:(id)sender
@@ -342,25 +348,25 @@
     NSLog(@"Dislike video authenticated");
     GDataServiceGoogleYouTube* service = OTAYouTube.youTubeServiceGData;
     
-//    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID];
-//    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
-//    {
-//         GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
-//         NSLog(@"%@", videoEntry.ratingsLink);
-//         GDataEntryYouTubeRating *newRating = [GDataEntryYouTubeRating ratingEntryWithValue:@"dislike"];
-//         [service fetchEntryByInsertingEntry:newRating forFeedURL:videoEntry.ratingsLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
-//         {
-//              if (error == nil)
-//              {
-//                  likeButton.enabled = true;
-//                  dislikeButton.enabled = false;
-//              }
-//              else
-//              {
-//                  NSLog(@"%@", error.description);
-//              }
-//         }];
-//    }];
+    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:videoID];
+    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
+    {
+         GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
+         NSLog(@"%@", videoEntry.ratingsLink);
+         GDataEntryYouTubeRating *newRating = [GDataEntryYouTubeRating ratingEntryWithValue:@"dislike"];
+         [service fetchEntryByInsertingEntry:newRating forFeedURL:videoEntry.ratingsLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
+         {
+              if (error == nil)
+              {
+                  likeButton.enabled = true;
+                  dislikeButton.enabled = false;
+              }
+              else
+              {
+                  NSLog(@"%@", error.description);
+              }
+         }];
+    }];
 }
 
 -(void)likeVideoAuthenticated:(GTMOAuth2ViewControllerTouch *)viewController
@@ -368,21 +374,21 @@
                         error:(NSError *)error
 {
     NSLog(@"Like video authenticated");
-//    OTAGlobals* globals = [OTAGlobals getInstance];
-//    GTLYouTubePlaylistItem *playlistItem = [[GTLYouTubePlaylistItem alloc] init];
-//    playlistItem.snippet = [[GTLYouTubePlaylistItemSnippet alloc] init];
-//    playlistItem.snippet.playlistId = globals.likePlaylistID;
-//    playlistItem.snippet.resourceId = [[GTLYouTubeResourceId alloc] init];
-//    playlistItem.snippet.resourceId.kind = @"youtube#video";
-//    playlistItem.snippet.resourceId.videoId = entry.youtubeVideoID;
-//    
-//    GTLQueryYouTube *query = [GTLQueryYouTube queryForPlaylistItemsInsertWithObject:playlistItem part:@"snippet"];
-//    query.mine = YES;
-//    query.maxResults = 1;
-//    
-//    [OTAYouTube.youTubeService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLYouTubeChannelListResponse *channelList, NSError *error) {}];
-//    likeButton.enabled = false;
-//    dislikeButton.enabled = true;
+    OTAGlobals* globals = [OTAGlobals getInstance];
+    GTLYouTubePlaylistItem *playlistItem = [[GTLYouTubePlaylistItem alloc] init];
+    playlistItem.snippet = [[GTLYouTubePlaylistItemSnippet alloc] init];
+    playlistItem.snippet.playlistId = globals.likePlaylistID;
+    playlistItem.snippet.resourceId = [[GTLYouTubeResourceId alloc] init];
+    playlistItem.snippet.resourceId.kind = @"youtube#video";
+    playlistItem.snippet.resourceId.videoId = videoID;
+    
+    GTLQueryYouTube *query = [GTLQueryYouTube queryForPlaylistItemsInsertWithObject:playlistItem part:@"snippet"];
+    query.mine = YES;
+    query.maxResults = 1;
+    
+    [OTAYouTube.youTubeService executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLYouTubeChannelListResponse *channelList, NSError *error) {}];
+    likeButton.enabled = false;
+    dislikeButton.enabled = true;
 }
 
 

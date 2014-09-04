@@ -13,7 +13,6 @@
                 <outlet property="commentTableController" destination="285" id="292"/>
                 <outlet property="commentTextField" destination="299" id="300"/>
                 <outlet property="descriptionLabel" destination="1bS-pP-KOI" id="mim-Sb-tkO"/>
-                <outlet property="dislikeButton" destination="304" id="306"/>
                 <outlet property="infoLabelView" destination="274" id="279"/>
                 <outlet property="likeButton" destination="210" id="294"/>
                 <outlet property="scrollView" destination="219" id="266"/>
@@ -120,11 +119,6 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <items>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="217"/>
-                        <barButtonItem image="dislike.png" id="304">
-                            <connections>
-                                <action selector="dislikeVideo:" destination="-1" id="305"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem image="like.png" id="210">
                             <connections>
                                 <action selector="likeVideo:" destination="-1" id="293"/>
@@ -161,7 +155,6 @@
         </tableViewController>
     </objects>
     <resources>
-        <image name="dislike.png" width="23" height="22"/>
         <image name="like.png" width="56" height="22"/>
     </resources>
 </document>
