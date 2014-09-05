@@ -33,6 +33,7 @@
     
     infoLabelView.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"labelBackground.png"]];
     commentLabelView.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"labelBackground.png"]];
+    videosLabelView.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"labelBackground.png"]];
     
     OTAGlobals* global = [OTAGlobals getInstance];
     NSString* feed_url = [global.wordpressDomain stringByAppendingFormat:@"getSongInfo.php?id=%i", entry.ID];
@@ -73,21 +74,26 @@
     return YES;
 }
 
+// Called when description html is loaded
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView
 {
-    aWebView.scrollView.scrollEnabled = NO;    // Property available in iOS 5.0 and later
-    CGRect frame = aWebView.frame;
-    
-    frame.size.width = self.view.frame.size.width;       // Your desired width here.
-    frame.size.height = 1;        // Set the height to a small one.
-    
-    aWebView.frame = frame;       // Set webView's Frame, forcing the Layout of its embedded scrollView with current Frame's constraints (Width set above).
-    
-    frame.size.height = aWebView.scrollView.contentSize.height;  // Get the corresponding height from the webView's embedded scrollView.
-    
-    aWebView.frame = frame;       // Set the scrollView contentHeight back to the frame itself.
-    
-    [self correctLayout];
+    if(aWebView == descriptionWebView)
+    {
+        aWebView.scrollView.scrollEnabled = NO;    // Property available in iOS 5.0 and later
+        CGRect frame = aWebView.frame;
+        
+        frame.size.width = self.view.frame.size.width;       // Your desired width here.
+        frame.size.height = 1;        // Set the height to a small one.
+        
+        aWebView.frame = frame;       // Set webView's Frame, forcing the Layout of its embedded scrollView with current Frame's constraints (Width set above).
+        
+        frame.size.height = aWebView.scrollView.contentSize.height;  // Get the corresponding height from the webView's embedded scrollView.
+        
+        aWebView.frame = frame;       // Set the scrollView contentHeight back to the frame itself.
+        
+        NSLog(@"description loaded");
+        [self correctLayout];
+    }
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
@@ -122,7 +128,7 @@
                                        "</head> \n"
                                        "<body>%@</body> \n"
                                        "</html>", [UIFont systemFontOfSize:12].familyName, [NSNumber numberWithInt:12], [result valueForKey:@"description"]];
-        [descriptionLabel loadHTMLString:descriptionHTML baseURL:nil];
+        [descriptionWebView loadHTMLString:descriptionHTML baseURL:nil];
         
         if(OTAYouTube.canAuthorize && ![videoID  isEqual: @""])
         {
@@ -177,7 +183,7 @@
                                                                  error:&error];
         if (doc == nil)
         {
-            [descriptionLabel loadHTMLString:@"failed to parse" baseURL:nil];
+            [descriptionWebView loadHTMLString:@"failed to parse" baseURL:nil];
         }
         else
         {
@@ -193,6 +199,7 @@
                     
                     i++;
                 }
+                NSLog(@"comments loaded");
                 [self correctLayout];
             }];
         }
@@ -217,23 +224,29 @@
 
 - (void)correctLayout
 {
-    [descriptionLabel setFrame:CGRectMake(descriptionLabel.frame.origin.x, descriptionLabel.frame.origin.y, commentTextField.frame.size.width, descriptionLabel.frame.size.height)];
+    NSLog(@"correcting layout");
+    
+    [descriptionWebView setFrame:CGRectMake(descriptionWebView.frame.origin.x, descriptionWebView.frame.origin.y, commentTextField.frame.size.width, descriptionWebView.frame.size.height)];
     // Fit description label to text size
-    [descriptionLabel sizeToFit];
+    [descriptionWebView sizeToFit];
+    
     
     if (videosListByArtistViewController.entries.count > 0)
     {
         [videosTable setHidden:FALSE];
+        [videosLabelView setHidden:FALSE];
+        [videosLabelView setFrame:CGRectMake(0.0, descriptionWebView.frame.origin.y+descriptionWebView.frame.size.height, videosLabelView.frame.size.width, videosLabelView.frame.size.height)];
         // Make sure the "Videos" table sits just beneath the description text
-        [videosTable setFrame:CGRectMake(0.0, descriptionLabel.frame.origin.y+descriptionLabel.frame.size.height+8, videosTable.frame.size.width, videosTable.frame.size.height)];
+        [videosTable setFrame:CGRectMake(0.0, videosLabelView.frame.origin.y+videosLabelView.frame.size.height, videosTable.frame.size.width, videosTable.frame.size.height)];
         // Make sure the "Comments" title sits just beneath the videos table
         [commentLabelView setFrame:CGRectMake(0.0, videosTable.frame.origin.y+videosTable.frame.size.height, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
     }
     else
     {
+        [videosLabelView setHidden:TRUE];
         [videosTable setHidden:TRUE];
         // Make sure the "Comments" title sits just beneath the description
-        [commentLabelView setFrame:CGRectMake(0.0, descriptionLabel.frame.origin.y+descriptionLabel.frame.size.height, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
+        [commentLabelView setFrame:CGRectMake(0.0, descriptionWebView.frame.origin.y+descriptionWebView.frame.size.height, commentLabelView.frame.size.width, commentLabelView.frame.size.height)];
     }
     
     // Make sure the comment text field sits just beneath the "Comments" title
@@ -247,7 +260,7 @@
     [commentTable setFrame:tempFrame];
     
     // Set the scroll view's content height to just past the last element (in this case the table view)
-    [scrollView setContentSize:CGSizeMake(scrollView.frame.size.width, tempFrame.origin.y + tempFrame.size.height)];
+    [scrollView setContentSize:CGSizeMake(scrollView.frame.size.width, tempFrame.origin.y + tempFrame.size.height + 10)];
 }
 
 

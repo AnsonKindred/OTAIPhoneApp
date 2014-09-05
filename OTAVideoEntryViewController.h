@@ -19,7 +19,7 @@
 @interface OTAVideoEntryViewController : UIViewController {
     OTARSSEntry* entry;
     IBOutlet UIWebView *videoWebView;
-    IBOutlet UIWebView *descriptionLabel;
+    IBOutlet UIWebView *descriptionWebView;
     IBOutlet UIView *infoLabelView;
     IBOutlet UIBarButtonItem *likeButton;
     IBOutlet UIBarButtonItem *dislikeButton;
@@ -32,6 +32,7 @@
     IBOutlet UITextField *commentTextField;
     IBOutlet UILabel *commentLabel;
     IBOutlet UIView *commentLabelView;
+    IBOutlet UIView *videosLabelView;
     NSOperationQueue* queue;
     
     NSString* videoID;

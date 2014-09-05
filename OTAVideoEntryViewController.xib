@@ -12,11 +12,12 @@
                 <outlet property="commentTable" destination="282" id="284"/>
                 <outlet property="commentTableController" destination="285" id="292"/>
                 <outlet property="commentTextField" destination="299" id="300"/>
-                <outlet property="descriptionLabel" destination="1bS-pP-KOI" id="mim-Sb-tkO"/>
+                <outlet property="descriptionWebView" destination="1bS-pP-KOI" id="rMM-Zb-8Kw"/>
                 <outlet property="infoLabelView" destination="274" id="279"/>
                 <outlet property="likeButton" destination="210" id="294"/>
                 <outlet property="scrollView" destination="219" id="266"/>
                 <outlet property="videoWebView" destination="5" id="47"/>
+                <outlet property="videosLabelView" destination="1M1-f5-HXD" id="lgk-c6-bmg"/>
                 <outlet property="videosListByArtistViewController" destination="NFh-d8-Z0g" id="C3Z-Gp-374"/>
                 <outlet property="videosTable" destination="skh-iR-zNJ" id="4CD-bI-JGj"/>
                 <outlet property="view" destination="1" id="4"/>
@@ -33,7 +34,7 @@
                     <subviews>
                         <tableView opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="skh-iR-zNJ">
                             <rect key="frame" x="0.0" y="248" width="321" height="64"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <connections>
@@ -51,7 +52,7 @@
                         </webView>
                         <webView contentMode="scaleToFill" id="1bS-pP-KOI" userLabel="Info">
                             <rect key="frame" x="0.0" y="195" width="321" height="45"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES"/>
                             <connections>
@@ -79,6 +80,22 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Comments" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="296" userLabel="Comments Label">
+                                    <rect key="frame" x="13" y="0.0" width="308" height="23"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="0.92000000000000004" colorSpace="calibratedRGB"/>
+                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="shadowColor" red="0.49778778699999998" green="0.49778778699999998" blue="0.49778778699999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    <size key="shadowOffset" width="0.0" height="1"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        </view>
+                        <view contentMode="scaleToFill" id="1M1-f5-HXD" userLabel="Videos Label View">
+                            <rect key="frame" x="0.0" y="217" width="320" height="23"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Other Videos" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="E0a-r5-Xz9" userLabel="Videos Label">
                                     <rect key="frame" x="13" y="0.0" width="308" height="23"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>

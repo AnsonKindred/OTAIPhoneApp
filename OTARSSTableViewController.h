@@ -21,7 +21,8 @@
     NSOperationQueue* queue;
     NSString* feed_url;
     
-    int lastEntryCount, page;
+    int lastEntryCount, page, totalRows, currentRows;
+    bool isRequestDone;
     
     // Ideally this would not be necessary but there is something I'm not understanding
     @public

@@ -19,8 +19,10 @@ static const int POSTS_PER_PAGE = 20;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self.tableView addObserver:self forKeyPath:@"contentSize" options:0 context:NULL];
+ 
+    // register observer for contentSize change
+    [self.tableView addObserver:self forKeyPath:@"contentSize" options:(NSKeyValueObservingOptionNew |
+                                                                        NSKeyValueObservingOptionOld) context:NULL];
     
     entries = [[NSMutableArray array] retain];
     queue = [[NSOperationQueue alloc] init];
@@ -49,13 +51,18 @@ static const int POSTS_PER_PAGE = 20;
     //[[ASIDownloadCache sharedCache] setShouldRespectCacheControlHeaders:NO];
 }
 
+// called when content size changes
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if([parent respondsToSelector:@selector(correctLayout)])
+    int oldHeight = [[change objectForKey:NSKeyValueChangeOldKey] CGSizeValue].height;
+    int newHeight = [[change objectForKey:NSKeyValueChangeNewKey] CGSizeValue].height;
+
+    if(newHeight - oldHeight > 0 && [parent respondsToSelector:@selector(correctLayout)])
     {
         CGRect frame = self.tableView.frame;
         frame.size = self.tableView.contentSize;
         self.tableView.frame = frame;
+        NSLog(@"adjusting table view to fit contents");
         [parent correctLayout];
     }
 }
@@ -122,7 +129,9 @@ static const int POSTS_PER_PAGE = 20;
         }
         else
         {
-            if([parent respondsToSelector:@selector(correctLayout)]) [parent correctLayout];
+            isRequestDone = true;
+            //NSLog(@"request finished");
+            //if([parent respondsToSelector:@selector(correctLayout)]) [parent correctLayout];
         }
     }
     else
@@ -134,6 +143,7 @@ static const int POSTS_PER_PAGE = 20;
 
 - (void)parseFeedJSON:(NSArray *)items
 {
+    totalRows = [items count];
     for (NSDictionary *item in items)
     {
         OTARSSEntry *entry = [[OTARSSEntry alloc] init:item];
