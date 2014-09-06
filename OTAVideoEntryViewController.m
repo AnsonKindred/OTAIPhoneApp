@@ -47,20 +47,6 @@
     [queue addOperation:request];
     NSLog([global.wordpressDomain stringByAppendingFormat:@"getSongsByArtist.php?id=%i", entry.artistID ]);
     [videosListByArtistViewController refreshWithUrl:[global.wordpressDomain stringByAppendingFormat:@"getSongsByArtist.php?artistID=%i&songID=%i", entry.artistID, entry.ID ]];
-    
-    
-//    if(entry.youtubeVideoID != @"")
-//    {
-//        [self fetchComments];
-//    }
-//    else
-//    {
-//        [commentLabelView setHidden:true];
-//        [commentTable setHidden:true];
-//        [commentTextField setHidden:true];
-//        likeButton.enabled = false;
-//        dislikeButton.enabled = false;
-//    }
 }
 
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -127,12 +113,25 @@
                                        "</style> \n"
                                        "</head> \n"
                                        "<body>%@</body> \n"
-                                       "</html>", [UIFont systemFontOfSize:12].familyName, [NSNumber numberWithInt:12], [result valueForKey:@"description"]];
+                                       "</html>", [UIFont fontWithName:@"Helvetica" size:12].familyName, [NSNumber numberWithInt:12], [result valueForKey:@"description"]];
         [descriptionWebView loadHTMLString:descriptionHTML baseURL:nil];
         
         if(OTAYouTube.canAuthorize && ![videoID  isEqual: @""])
         {
             [OTAYouTube authenticateThen:@selector(checkIfVideoLiked:auth:error:) delegate:self viewController:self];
+        }
+        
+        if(![videoID isEqual:@""])
+        {
+            [self fetchComments];
+        }
+        else
+        {
+            [commentLabelView setHidden:true];
+            [commentTable setHidden:true];
+            [commentTextField setHidden:true];
+            likeButton.enabled = false;
+            dislikeButton.enabled = false;
         }
     }
     else
@@ -162,14 +161,15 @@
 - (void)fetchComments
 {
     NSLog(@"Fetching comments");
-//    NSString* urlString = [[@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID] stringByAppendingString:@"/comments?v=2"];
-//    NSURL *url = [NSURL URLWithString:urlString];
-//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-//    
-//    [request setDelegate:self];
-//    [request setDidFinishSelector:@selector(displayComments:)];
-//    
-//    [queue addOperation:request];
+    NSString* urlString = [[@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:videoID] stringByAppendingString:@"/comments?v=2"];
+    NSLog(urlString);
+    NSURL *url = [NSURL URLWithString:urlString];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(displayComments:)];
+    
+    [queue addOperation:request];
 }
 
 - (void)displayComments:(ASIHTTPRequest *)request
@@ -194,7 +194,6 @@
                 {
                     NSString* commentText   = [comment valueForChild:@"content"];
                     NSString* commentAuthor = [[comment elementForChild:@"author"] valueForChild:@"name"];
-                    
                     [self addComment:commentText withAuthor:commentAuthor atIndex:i];
                     
                     i++;
@@ -331,27 +330,27 @@
     OTAGlobals* globals = [OTAGlobals getInstance];
     GDataServiceGoogleYouTube* service = OTAYouTube.youTubeServiceGData;
     
-//    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:entry.youtubeVideoID];
-//    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
-//    {
-//        GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
-//        NSLog(@"%@", videoEntry.comment.feedLink.URL);
-//        GDataEntryYouTubeComment *newCommentEntry = [GDataEntryYouTubeComment commentEntry];
-//        [newCommentEntry setContentWithString:commentTextField.text];
-//        [service fetchEntryByInsertingEntry:newCommentEntry forFeedURL:videoEntry.comment.feedLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
-//        {
-//            if (error == nil)
-//            {
-//                [self addComment:commentTextField.text withAuthor:globals.username atIndex:0];
-//                commentTextField.text = @"";
-//                [self correctLayout];
-//            }
-//            else
-//            {
-//                NSLog(@"%@", error.description);
-//            }
-//        }];
-//    }];
+    NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:videoID];
+    [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
+    {
+        GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
+        NSLog(@"%@", videoEntry.comment.feedLink.URL);
+        GDataEntryYouTubeComment *newCommentEntry = [GDataEntryYouTubeComment commentEntry];
+        [newCommentEntry setContentWithString:commentTextField.text];
+        [service fetchEntryByInsertingEntry:newCommentEntry forFeedURL:videoEntry.comment.feedLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
+        {
+            if (error == nil)
+            {
+                [self addComment:commentTextField.text withAuthor:globals.username atIndex:0];
+                commentTextField.text = @"";
+                [self correctLayout];
+            }
+            else
+            {
+                NSLog(@"%@", error.description);
+            }
+        }];
+    }];
 }
 
 -(void)dislikeVideoAuthenticated:(GTMOAuth2ViewControllerTouch *)viewController

@@ -7,7 +7,7 @@
 //
 
 #import "OTAArtistListTableViewController.h"
-#import "OTAArtistViewController.h"
+#import "OTAVideoEntryViewController.h"
 
 @implementation OTAArtistListTableViewController
 
@@ -22,9 +22,9 @@
     {
         entry = [entries objectAtIndex:indexPath.row];
     }
-    OTAArtistViewController* artistViewController = [[OTAArtistViewController alloc] initWithNibName:@"OTAArtistViewController" bundle:[NSBundle mainBundle]];
-	artistViewController.entry = entry;
-	[[parent navigationController] pushViewController:artistViewController animated:YES];
+	OTAVideoEntryViewController *controller = [[OTAVideoEntryViewController alloc] initWithNibName:@"OTAVideoEntryViewController" bundle:[NSBundle mainBundle]];
+	controller.entry = entry;
+	[[parent navigationController] pushViewController:controller animated:YES];
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath

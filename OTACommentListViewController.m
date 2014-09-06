@@ -52,9 +52,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
     }
 	
-    cell.textLabel.font = [UIFont systemFontOfSize:13];
+    cell.textLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:13];
     cell.textLabel.text = comment.author;
-    cell.detailTextLabel.font = [UIFont systemFontOfSize:13];
+    cell.detailTextLabel.font = [UIFont fontWithName:@"Helvetica" size:13];
     cell.detailTextLabel.text = comment.text;
     cell.detailTextLabel.numberOfLines = 0;
     [cell.detailTextLabel sizeToFit];
