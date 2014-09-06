@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTARSSEntry.h"
+#import "EntrySession.h"
 #import "OTAVideoEntryViewController.h"
 #import "GDataEntryYouTubePlaylist.h"
 

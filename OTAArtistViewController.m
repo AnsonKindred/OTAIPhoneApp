@@ -36,7 +36,7 @@
 //                       failure:^(NSError *error) {}
 //                    ];
     
-    descriptionLabel.text = entry.description;
+    //descriptionLabel.text = entry.description;
     descriptionLabel.text = [descriptionLabel.text stringByReplacingOccurrencesOfString:@"Share on Facebook" withString:@""];
     [self correctLayout];
 	//Set the title of the navigation bar

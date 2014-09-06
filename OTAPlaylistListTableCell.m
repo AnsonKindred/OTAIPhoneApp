@@ -32,7 +32,7 @@
 - (void) playAllClicked:(id)sender
 {
     OTAPlaylistVideoViewController* playAllView = [[OTAPlaylistVideoViewController alloc] initWithNibName:@"OTAPlaylistVideoViewController" bundle:[NSBundle mainBundle]];
-	playAllView.playlistEntry = entry;
+	//playAllView.playlistEntry = entry;
 	[navigationController pushViewController:playAllView animated:YES];
 }
 

@@ -155,7 +155,7 @@ NSString* developerKey = @"AI39si4lqh87sRiuNbPH3kisvTBlKQUrLx5qEFRXB8lTXkKfjh1aV
     return service;
 }
 
-+ (OTARSSEntry*) parseVideo:(GDataXMLElement*)video
++ (EntrySession*) parseVideo:(GDataXMLElement*)video
 {
     NSString* dataString = [video valueForChild:@"title"];
     NSArray* data = [dataString componentsSeparatedByString:@"|"];
@@ -220,7 +220,7 @@ NSString* developerKey = @"AI39si4lqh87sRiuNbPH3kisvTBlKQUrLx5qEFRXB8lTXkKfjh1aV
         }
     } 
     
-    return [[OTARSSEntry alloc] init:artist
+    return [[EntrySession alloc] init:artist
                                 song:song
                             videoUrl:videoUrl
                       youtubeVideoID:youtubeVideoID];

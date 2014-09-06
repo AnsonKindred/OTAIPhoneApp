@@ -13,7 +13,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTARSSEntry *entry;
+    EntrySession *entry;
     if (tableView == self.searchDisplayController.searchResultsTableView)
     {
         entry = [self.filteredEntries objectAtIndex:indexPath.row];
@@ -30,7 +30,7 @@
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
     UITableViewCell* cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    OTARSSEntry *entry;
+    EntrySession *entry;
     if (tableView == self.searchDisplayController.searchResultsTableView)
     {
         entry = [self.filteredEntries objectAtIndex:indexPath.row];
@@ -56,7 +56,7 @@
     /*
      Search the main list for products whose type matches the scope (if selected) and whose name matches searchText; add items that match to the filtered array.
      */
-    for (OTARSSEntry *entry in entries)
+    for (EntrySession *entry in entries)
     {
         NSRange range2 = [entry.artist rangeOfString:searchText options:NSCaseInsensitiveSearch];
         

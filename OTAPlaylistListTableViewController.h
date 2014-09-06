@@ -9,23 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OTARSSTableViewController.h"
 
-@interface OTAPlaylistListTableViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate, UIScrollViewDelegate>
-{
-    NSMutableArray* entries;
-    NSOperationQueue* queue;
-    
-    // Ideally this would not be necessary but there is something I'm not understanding
-@public
-    id parent;
-}
+@interface OTAPlaylistListTableViewController : OTARSSTableViewController
 
-- (void)refresh;
-
-@property (nonatomic, retain) NSMutableArray* entries;
-@property (nonatomic, retain) NSMutableArray* filteredEntries;
-
-@property (nonatomic, copy) NSString* savedSearchTerm;
-@property (nonatomic) NSInteger savedScopeButtonIndex;
-@property (nonatomic) BOOL searchWasActive;
 
 @end

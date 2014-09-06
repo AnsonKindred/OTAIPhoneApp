@@ -7,16 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GDataEntryYouTubePlaylist.h"
+#import "EntryGenre.h"
 
 @interface OTAPlaylistListTableCell : UITableViewCell
 {
     UINavigationController* navigationController;
     
-    GDataEntryYouTubePlaylist* entry;
+    EntryGenre* entry;
 }
 - (void) playAllClicked:(id)sender;
 @property (strong) UINavigationController* navigationController;
-@property (strong) GDataEntryYouTubePlaylist* entry;
+@property (strong) EntryGenre* entry;
 
 @end

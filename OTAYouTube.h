@@ -12,7 +12,7 @@
 #import "GTMOAuth2WindowController.h"
 #import "GTLYouTube.h"
 #import "GDataYouTube.h"
-#import "OTARSSEntry.h"
+#import "EntrySession.h"
 #import "GDataXMLElement-Extras.h"
 
 @interface OTAYouTube : NSObject
@@ -34,5 +34,5 @@
 
 + (Boolean) canAuthorize;
 
-+ (OTARSSEntry*) parseVideo:(GDataXMLElement*)video;
++ (EntrySession*) parseVideo:(GDataXMLElement*)video;
 @end

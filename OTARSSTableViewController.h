@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTARSSEntry.h"
+#import "EntrySession.h"
 #import "OTAGlobals.h"
 #import "ASIHTTPRequest.h"
 #import "ASIDownloadCache.h"

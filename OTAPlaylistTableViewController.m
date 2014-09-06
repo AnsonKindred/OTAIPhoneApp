@@ -9,7 +9,7 @@
 #import "OTAPlaylistTableViewController.h"
 #import "OTAYouTube.h"
 #import "GDataXMLElement-Extras.h"
-#import "OTARSSEntry.h"
+#import "EntrySession.h"
 #import "OTAPlaylistVideoViewController.h"
 
 @implementation OTAPlaylistTableViewController
@@ -124,7 +124,7 @@
     /*
      If the requesting table view is the search display controller's table view, configure the cell using the filtered content, otherwise use the main list.
      */
-    OTARSSEntry* entry = nil;
+    EntrySession* entry = nil;
     if (tableView == self.searchDisplayController.searchResultsTableView)
     {
         entry = [filteredEntries objectAtIndex:indexPath.row];
@@ -170,7 +170,7 @@
     /*
      Search the main list for products whose type matches the scope (if selected) and whose name matches searchText; add items that match to the filtered array.
      */
-    for (OTARSSEntry *entry in entries)
+    for (EntrySession *entry in entries)
     {
         NSRange range1 = [entry.song rangeOfString:searchText options:NSCaseInsensitiveSearch];
         NSRange range2 = [entry.artist rangeOfString:searchText options:NSCaseInsensitiveSearch];
@@ -186,7 +186,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTARSSEntry *entry;
+    EntrySession *entry;
     if (tableView == self.searchDisplayController.searchResultsTableView)
     {
         entry = [self.filteredEntries objectAtIndex:indexPath.row];

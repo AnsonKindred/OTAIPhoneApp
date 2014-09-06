@@ -146,7 +146,7 @@ static const int POSTS_PER_PAGE = 20;
     totalRows = [items count];
     for (NSDictionary *item in items)
     {
-        OTARSSEntry *entry = [[OTARSSEntry alloc] init:item];
+        EntrySession *entry = [[EntrySession alloc] init:item];
         
         [entries addObject:entry];
         
@@ -292,7 +292,7 @@ static const int POSTS_PER_PAGE = 20;
     /*
      If the requesting table view is the search display controller's table view, configure the cell using the filtered content, otherwise use the main list.
      */
-    OTARSSEntry* entry = nil;
+    EntrySession* entry = nil;
     if (tableView == self.searchDisplayController.searchResultsTableView)
     {
         entry = [filteredEntries objectAtIndex:indexPath.row];
@@ -338,7 +338,7 @@ static const int POSTS_PER_PAGE = 20;
     /*
      Search the main list for products whose type matches the scope (if selected) and whose name matches searchText; add items that match to the filtered array.
      */
-    for (OTARSSEntry *entry in entries)
+    for (EntrySession *entry in entries)
     {
         NSRange range1 = [entry.song rangeOfString:searchText options:NSCaseInsensitiveSearch];
         NSRange range2 = [entry.artist rangeOfString:searchText options:NSCaseInsensitiveSearch];

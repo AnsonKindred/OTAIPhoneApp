@@ -14,4 +14,6 @@
     IBOutlet OTAPlaylistListTableViewController *tableViewController;
 }
 
+@property (atomic, strong) IBOutlet OTAPlaylistListTableViewController* tableViewController;
+
 @end

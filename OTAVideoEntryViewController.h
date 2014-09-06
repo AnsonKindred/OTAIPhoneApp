@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTARSSEntry.h"
+#import "EntrySession.h"
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "GTMOAuth2WindowController.h"
 #import "GDataXMLNode.h"
@@ -17,7 +17,7 @@
 #import "OTAVideosListByArtistViewController.h"
 
 @interface OTAVideoEntryViewController : UIViewController {
-    OTARSSEntry* entry;
+    EntrySession* entry;
     IBOutlet UIWebView *videoWebView;
     IBOutlet UIWebView *descriptionWebView;
     IBOutlet UIView *infoLabelView;
@@ -39,7 +39,7 @@
     NSString* description;
 }
 
-@property (retain) OTARSSEntry* entry;
+@property (retain) EntrySession* entry;
 @property (retain, nonatomic) IBOutlet OTAVideosListByArtistViewController *videosListByArtistViewController;
 
 - (void)correctLayout;

@@ -7,7 +7,7 @@
 //
 
 #import "OTAVideosListByArtistViewController.h"
-#import "OTARSSEntry.h"
+#import "EntrySession.h"
 #import "ASIHTTPRequest/ASIHTTPRequest.h"
 #import "GDataXMLNode.h"
 #import "GDataXML/GDataXMLElement-Extras.h"
@@ -23,7 +23,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"TEST");
-    OTARSSEntry *selectedEntry = [entries objectAtIndex:indexPath.row];
+    EntrySession *selectedEntry = [entries objectAtIndex:indexPath.row];
 	OTAVideoEntryViewController *controller = [[OTAVideoEntryViewController alloc] initWithNibName:@"OTAVideoEntryViewController" bundle:[NSBundle mainBundle]];
 	controller.entry = selectedEntry;
     UINavigationController* navigationController = [parent navigationController];
@@ -33,7 +33,7 @@
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
     UITableViewCell* cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    OTARSSEntry *entry = [entries objectAtIndex:indexPath.row];
+    EntrySession *entry = [entries objectAtIndex:indexPath.row];
     
     cell.textLabel.text = entry.song;
     cell.detailTextLabel.text = @"";

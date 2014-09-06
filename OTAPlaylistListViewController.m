@@ -9,14 +9,18 @@
 #import "OTAPlaylistListViewController.h"
 
 @implementation OTAPlaylistListViewController
+@synthesize tableViewController;
 
 - (void)viewDidLoad
 {
     [self.navigationController setNavigationBarHidden:false animated:true];
     [super viewDidLoad];
+	
     self.title = @"Playlists";
-    tableViewController->parent = self;
-    [tableViewController refresh];
+    self.tableViewController->parent = self;
+    self.tableViewController->isPaginated = true;
+    OTAGlobals* global = [OTAGlobals getInstance];
+    [tableViewController refreshWithUrl:[global.wordpressDomain stringByAppendingFormat:@"getGenres.php?posts_per_page=%i", 20]];
 }
 
 - (void)viewWillAppear:(BOOL)animated

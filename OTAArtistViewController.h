@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <SDWebImage/UIImageView+WebCache.h>
-#import "OTARSSEntry.h"
+#import "EntrySession.h"
 #import "OTAVideosListByArtistViewController.h"
 #import <Foundation/NSXMLParser.h>
 
@@ -16,14 +16,14 @@
     IBOutlet UILabel *descriptionLabel;
 	IBOutlet UIImageView *thumbnail;
     IBOutlet UIScrollView *scrollView;
-	OTARSSEntry *entry;
+	EntrySession *entry;
     IBOutlet OTAVideosListByArtistViewController *videosListByArtistViewController;    
     NSOperationQueue *_videoQueue;
     
     NSMutableString* resultString;
 }
 @property (retain, nonatomic) IBOutlet OTAVideosListByArtistViewController *videosListByArtistViewController;
-@property (nonatomic, retain) OTARSSEntry *entry;
+@property (nonatomic, retain) EntrySession *entry;
 @property (retain) NSOperationQueue *videoQueue;
 
 @end

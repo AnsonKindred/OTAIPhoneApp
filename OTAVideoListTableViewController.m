@@ -12,7 +12,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTARSSEntry *entry;
+    EntrySession *entry;
     if (tableView == self.searchDisplayController.searchResultsTableView)
     {
         entry = [self.filteredEntries objectAtIndex:indexPath.row];
