@@ -39,10 +39,32 @@
     {
         entry = [entries objectAtIndex:indexPath.row];
     }
-    cell.textLabel.text = entry.title;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", entry.numPosts];
+    cell.textLabel.text = entry.artist;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", entry.count];
     cell.detailTextLabel.text = [cell.detailTextLabel.text stringByAppendingString:@" videos"];
     return cell;
+}
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    /*
+     Update the filtered array based on the search text and scope.
+     */
+    
+    [self.filteredEntries removeAllObjects]; // First clear the filtered array.
+    
+    /*
+     Search the main list for products whose type matches the scope (if selected) and whose name matches searchText; add items that match to the filtered array.
+     */
+    for (OTARSSEntry *entry in entries)
+    {
+        NSRange range2 = [entry.artist rangeOfString:searchText options:NSCaseInsensitiveSearch];
+        
+        if(range2.location != NSNotFound)
+        {
+            [self.filteredEntries addObject:entry];
+        }
+    }
 }
 
 @end

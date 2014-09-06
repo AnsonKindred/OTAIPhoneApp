@@ -35,7 +35,7 @@
     UITableViewCell* cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     OTARSSEntry *entry = [entries objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = entry.title;
+    cell.textLabel.text = entry.song;
     cell.detailTextLabel.text = @"";
     
     return cell;

@@ -129,7 +129,7 @@
     {
         NSArray *videos = [doc.rootElement elementsForName:@"entry"];
         entry = [OTAYouTube parseVideo:videos[0]];
-        NSLog(entry.title);
+        NSLog(entry.song);
         [self fetchVideoMetaData];
     }
 }

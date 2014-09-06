@@ -1,11 +1,11 @@
 #import "OTARSSEntry.h"
 
 @implementation OTARSSEntry
-@synthesize title = _title;
-@synthesize subTitle = _subTitle;
+@synthesize song = _song;
+@synthesize artist = _artist;
 @synthesize ID = _ID;
 @synthesize artistID = _artistID;
-@synthesize numPosts = _numPosts;
+@synthesize count = _count;
 
 - (id)init:(NSDictionary*)item
 {
@@ -13,8 +13,10 @@
         _ID = [[item objectForKey:@"id"] intValue];
         int artistID = [[item objectForKey:@"artistID"] intValue];
         _artistID = artistID;
-        _title = [item objectForKey:@"song"];
-        _subTitle = [item objectForKey:@"artist"];
+        _song = [item objectForKey:@"song"];
+        _artist = [item objectForKey:@"artist"];
+        int count = [[item objectForKey:@"count"] intValue];
+        _count = count;
     }
     return self;
 }

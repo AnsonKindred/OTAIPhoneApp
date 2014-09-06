@@ -134,8 +134,8 @@
         entry = [entries objectAtIndex:indexPath.row];
     }
 	
-    cell.textLabel.text = entry.title;
-    cell.detailTextLabel.text = entry.subTitle;
+    cell.textLabel.text = entry.song;
+    cell.detailTextLabel.text = entry.artist;
 	
     return cell;
 }
@@ -172,8 +172,8 @@
      */
     for (OTARSSEntry *entry in entries)
     {
-        NSRange range1 = [entry.title rangeOfString:searchText options:NSCaseInsensitiveSearch];
-        NSRange range2 = [entry.subTitle rangeOfString:searchText options:NSCaseInsensitiveSearch];
+        NSRange range1 = [entry.song rangeOfString:searchText options:NSCaseInsensitiveSearch];
+        NSRange range2 = [entry.artist rangeOfString:searchText options:NSCaseInsensitiveSearch];
         
         if(range1.location != NSNotFound || range2.location != NSNotFound)
         {

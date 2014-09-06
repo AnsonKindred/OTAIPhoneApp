@@ -7,7 +7,7 @@
 //
 #import "OTAArtistListViewController.h"
 #import <QuartzCore/QuartzCore.h>
-
+#import "OTAGlobals.h"
 
 @implementation OTAArtistListViewController
 @synthesize tableViewController;
@@ -19,28 +19,17 @@
     [self.navigationController setNavigationBarHidden:false animated:true];
     [super viewDidLoad];
 	
-    self.title = @"Artists";    
+    self.title = @"Artists";
     self.tableViewController->parent = self;
-    lastEntryCount = 0;
-    page = 1;
-    [tableViewController refreshWithUrl:@"http://www.offtheavenue.tv/?feed=rss2&posts_per_page=10&orderby=title&order=asc&paged=1&cat=163"];
+    self.tableViewController->isPaginated = true;
+    OTAGlobals* global = [OTAGlobals getInstance];
+    [tableViewController refreshWithUrl:[global.wordpressDomain stringByAppendingFormat:@"getArtists.php?posts_per_page=%i", 20]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [self.navigationController setNavigationBarHidden:false animated:true];
 }
-
-- (void)requestFinished
-{
-    if([tableViewController.entries count] > lastEntryCount)
-    {
-        page++;
-        lastEntryCount = [tableViewController.entries count];
-        [tableViewController refreshWithUrl:[@"http://www.offtheavenue.tv/?feed=rss2&posts_per_page=10&orderby=title&order=asc&cat=163&paged=" stringByAppendingString:[NSString stringWithFormat:@"%d", page]]];
-    }
-}
-
 
 @end
 

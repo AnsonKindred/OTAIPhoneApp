@@ -14,6 +14,7 @@
     UIImage* logoImage;
     IBOutlet UIWebView *videoWebView;
     IBOutlet OTAHomeCollectionViewController *homeCollectionViewController;
+    NSOperationQueue* queue;
 }
 @property (atomic, strong) IBOutlet OTAHomeCollectionViewController* homeCollectionViewController;
 @end

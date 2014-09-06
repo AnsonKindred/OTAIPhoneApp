@@ -3,16 +3,16 @@
 @interface OTARSSEntry : NSObject {
     NSInteger _ID;
     NSInteger _artistID;
-    NSInteger _numPosts;
-    NSString *_title;
-    NSString *_subTitle;
+    NSInteger _count;
+    NSString *_song;
+    NSString *_artist;
 }
 
 @property NSInteger ID;
 @property NSInteger artistID;
-@property NSInteger numPosts;
-@property (copy) NSString *title;
-@property (copy) NSString *subTitle;
+@property NSInteger count;
+@property (copy) NSString *song;
+@property (copy) NSString *artist;
 
 - (id)init:(NSDictionary*)item;
 

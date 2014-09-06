@@ -40,7 +40,7 @@
     descriptionLabel.text = [descriptionLabel.text stringByReplacingOccurrencesOfString:@"Share on Facebook" withString:@""];
     [self correctLayout];
 	//Set the title of the navigation bar
-	self.navigationItem.title = entry.title;
+	self.navigationItem.title = entry.song;
     
     NSString* urlString = @"http://www.offtheavenue.tv/?feed=rss2&tag=";
 //    urlString = [urlString stringByAppendingString:entry.artistTag];

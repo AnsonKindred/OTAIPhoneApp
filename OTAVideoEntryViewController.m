@@ -24,7 +24,7 @@
     videosListByArtistViewController->parent = self;
     
     [self.navigationController setNavigationBarHidden:false animated:true];
-    self.title = entry.title;
+    self.title = entry.song;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(youTubeVideoExit:)
