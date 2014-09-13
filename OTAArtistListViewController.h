@@ -4,7 +4,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTAArtistViewController.h"
 #import "OTAVideoEntryViewController.h"
 #import "OTARSSTableViewController.h"
 #import "OTAArtistListTableViewController.h"

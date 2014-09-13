@@ -13,7 +13,6 @@
 #import "OTAComment.h"
 #import "OTAPlaylistViewController.h"
 #import "OTAVideoListViewController.h"
-#import "OTAPlaylistListTableCell.h"
 #import "EntryGenre.h"
 
 @implementation OTAPlaylistListTableViewController
@@ -53,9 +52,9 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    OTAPlaylistListTableCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (cell == nil) {
-        cell = [[OTAPlaylistListTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
     }
 	
     /*
@@ -72,8 +71,8 @@
         entry = [entries objectAtIndex:indexPath.row];
     }
 	
-    cell.entry = entry;
-    cell.navigationController = [parent navigationController];
+    //cell.entry = entry;
+    //cell.navigationController = [parent navigationController];
     cell.textLabel.text = entry.title;
 	
     return cell;
