@@ -25,6 +25,7 @@
             <viewControllers>
                 <viewController definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" id="6" customClass="OTAHomeViewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="Root View Controller" id="7"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
@@ -33,10 +34,6 @@
                     <nil key="simulatedDestinationMetrics"/>
                 </viewController>
             </viewControllers>
-            <toolbar key="toolbar" autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="11">
-                <rect key="frame" x="0.0" y="436" width="320" height="44"/>
-                <autoresizingMask key="autoresizingMask"/>
-            </toolbar>
             <connections>
                 <outlet property="delegate" destination="-1" id="8"/>
                 <outlet property="homeViewController" destination="6" id="10"/>

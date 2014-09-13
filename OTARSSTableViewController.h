@@ -19,13 +19,13 @@
 @interface OTARSSTableViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate, UIScrollViewDelegate> {
     NSMutableArray* entries;
     NSOperationQueue* queue;
-    NSString* feed_url;
     
     int lastEntryCount, page, totalRows, currentRows;
     bool isRequestDone;
     
     // Ideally this would not be necessary but there is something I'm not understanding
     @public
+    NSString* feed_url;
     id parent;
     bool isPaginated;
 }

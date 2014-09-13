@@ -12,7 +12,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    EntrySession *entry;
+    EntrySession* entry;
     if (tableView == self.searchDisplayController.searchResultsTableView)
     {
         entry = [self.filteredEntries objectAtIndex:indexPath.row];
@@ -21,6 +21,19 @@
     {
         entry = [entries objectAtIndex:indexPath.row];
     }
+    
+    [self loadSession:entry];
+}
+
+- (void)playAll
+{
+    EntrySession* entry = [entries objectAtIndex:0];
+    
+    [self loadSession:entry];
+}
+
+- (void)loadSession:(EntrySession*) entry
+{
 	OTAVideoEntryViewController *controller = [[OTAVideoEntryViewController alloc] initWithNibName:@"OTAVideoEntryViewController" bundle:[NSBundle mainBundle]];
 	controller.entry = entry;
 	[[parent navigationController] pushViewController:controller animated:YES];

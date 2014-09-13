@@ -13,6 +13,9 @@
 
 @interface OTAVideoListViewController : UIViewController {
     IBOutlet OTAVideoListTableViewController* tableViewController;
+    
+@public
+    int filterByGenre;
 }
 
 @property (atomic, strong) IBOutlet OTAVideoListTableViewController* tableViewController;

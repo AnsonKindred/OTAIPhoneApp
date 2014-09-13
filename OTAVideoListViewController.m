@@ -16,9 +16,18 @@
     [self.navigationController setNavigationBarHidden:false animated:true];
     
     self.title = @"Videos";
-    self.tableViewController->parent = self;
-    self.tableViewController->isPaginated = true;
-    [tableViewController refresh];
+    tableViewController->parent = self;
+    tableViewController->isPaginated = true;
+    
+    if (filterByGenre != 0)
+    {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:tableViewController action:@selector(playAll)];
+        [tableViewController refreshWithUrl:[self.tableViewController->feed_url stringByAppendingFormat:@"&genreID=%i", filterByGenre]];
+    }
+    else
+    {
+        [tableViewController refresh];
+    }
     
     [super viewDidLoad];
 }

@@ -89,7 +89,7 @@ static const int POSTS_PER_PAGE = 20;
 
 - (void)refresh
 {
-    NSLog(@"%i", page);
+    //NSLog(@"%i", page);
     NSURL *url = [NSURL URLWithString:[feed_url stringByAppendingFormat:@"&paged=%i", page]];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
@@ -102,7 +102,7 @@ static const int POSTS_PER_PAGE = 20;
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     NSData* returnedData = [request responseData];
-    
+    //NSLog(@"%@", [[NSString alloc] initWithData:returnedData encoding:NSUTF8StringEncoding]);
     NSError *error = nil;
     id object = [NSJSONSerialization
                  JSONObjectWithData:returnedData

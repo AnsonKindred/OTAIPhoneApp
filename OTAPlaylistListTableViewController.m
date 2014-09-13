@@ -12,6 +12,7 @@
 #import "OTAGlobals.h"
 #import "OTAComment.h"
 #import "OTAPlaylistViewController.h"
+#import "OTAVideoListViewController.h"
 #import "OTAPlaylistListTableCell.h"
 #import "EntryGenre.h"
 
@@ -28,9 +29,9 @@
     {
         entry = [entries objectAtIndex:indexPath.row];
     }
-    OTAPlaylistViewController* playlistViewController = [[OTAPlaylistViewController alloc] initWithNibName:@"OTAPlaylistViewController" bundle:[NSBundle mainBundle]];
-	//playlistViewController.entry = entry;
-	[[parent navigationController] pushViewController:playlistViewController animated:YES];
+    OTAVideoListViewController* videoListViewController = [[OTAVideoListViewController alloc] initWithNibName:@"OTAVideoListViewController" bundle:[NSBundle mainBundle]];
+	videoListViewController->filterByGenre = entry.ID;
+	[[parent navigationController] pushViewController:videoListViewController animated:YES];
 }
 
 - (void)parseFeedJSON:(NSArray *)items

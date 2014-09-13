@@ -45,8 +45,7 @@
     [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
     
     [queue addOperation:request];
-    NSLog([global.wordpressDomain stringByAppendingFormat:@"getSongsByArtist.php?id=%i", entry.artistID ]);
-    [videosListByArtistViewController refreshWithUrl:[global.wordpressDomain stringByAppendingFormat:@"getSongsByArtist.php?artistID=%i&songID=%i", entry.artistID, entry.ID ]];
+    [videosListByArtistViewController refreshWithUrl:[global.wordpressDomain stringByAppendingFormat:@"getSongs.php?artistID=%i&excludeSongID=%i", entry.artistID, entry.ID ]];
 }
 
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
