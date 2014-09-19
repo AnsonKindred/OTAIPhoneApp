@@ -11,7 +11,6 @@
 #import "OTAYouTube.h"
 #import "OTAGlobals.h"
 #import "OTAComment.h"
-#import "OTAPlaylistViewController.h"
 #import "OTAVideoListViewController.h"
 #import "EntryGenre.h"
 

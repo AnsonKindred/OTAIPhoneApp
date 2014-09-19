@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OTARSSTableViewController.h"
 #import "OTAVideoEntryViewController.h"
+#import "OTAPlaylistPlayAllViewController.h"
 
 @interface OTAVideoListTableViewController : OTARSSTableViewController {
     

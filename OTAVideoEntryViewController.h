@@ -18,6 +18,7 @@
 
 @interface OTAVideoEntryViewController : UIViewController {
     EntrySession* entry;
+
     IBOutlet UIWebView *videoWebView;
     IBOutlet UIWebView *descriptionWebView;
     IBOutlet UIView *infoLabelView;

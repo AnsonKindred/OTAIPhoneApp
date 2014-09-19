@@ -21,21 +21,70 @@
     {
         entry = [entries objectAtIndex:indexPath.row];
     }
-    
-    [self loadSession:entry];
+
+    OTAVideoEntryViewController *controller = [[OTAVideoEntryViewController alloc] initWithNibName:@"OTAVideoEntryViewController" bundle:[NSBundle mainBundle]];
+	controller.entry = entry;
+	[[parent navigationController] pushViewController:controller animated:YES];
 }
 
 - (void)playAll
 {
-    EntrySession* entry = [entries objectAtIndex:0];
-    
-    [self loadSession:entry];
+    OTAPlaylistPlayAllViewController *controller = [[OTAPlaylistPlayAllViewController alloc] initWithNibName:@"OTAPlaylistPlayAllViewController" bundle:[NSBundle mainBundle]];
+    controller.playlist = entries;
+	[[parent navigationController] pushViewController:controller animated:YES];
+//    NSString* playlistCSV;
+//    NSString* firstVideo = [entries[0] videoID];
+//    
+//    playlistCSV = [entries[1] videoID];
+//    for(int i = 2; i < [entries count]; i++)
+//    {
+//        playlistCSV = [playlistCSV stringByAppendingFormat:@",%@", [entries[i] videoID]];
+//    }
+//
+//    NSString* videoHTML = @"\
+//    <!DOCTYPE html>\
+//    <html>\
+//    <head>\
+//    <style>\
+//    body { margin:0px 0px 0px 0px; }\
+//    </style>\
+//    </head>\
+//    <body>\
+//    <div id=\"player\"></div>\
+//    <script>\
+//    var tag = document.createElement('script');\
+//    tag.src = \"http://www.youtube.com/player_api\";\
+//    var firstScriptTag = document.getElementsByTagName('script')[0];\
+//    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);\
+//    var player;\
+//    function onYouTubePlayerAPIReady() {\
+//    player = new YT.Player('player', {\
+//    width:'%0.0f',\
+//    height:'%0.0f',\
+//    videoId:'%@',\
+//    playerVars: { 'playlist': '%@' },\
+//    events: {\
+//    'onReady': onPlayerReady,\
+//    }\
+//    });\
+//    }\
+//    function onPlayerReady(event) {\
+//    event.target.playVideo();\
+//    }\
+//    </script>\
+//    </body>\
+//    </html>";
+//    
+//    videoHTML = [NSString stringWithFormat:videoHTML, 0.0f, 380.0f, firstVideo, playlistCSV];
+//    UIWebView *videoView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 300)];
+//    
+//    videoView.hidden = true;
+//    videoView.backgroundColor = [UIColor clearColor];
+//    videoView.opaque = NO;
+//    [self.view addSubview:videoView];
+//    
+//    videoView.mediaPlaybackRequiresUserAction = NO;
+//    [videoView loadHTMLString:videoHTML baseURL:[[NSBundle mainBundle] resourceURL]];
 }
 
-- (void)loadSession:(EntrySession*) entry
-{
-	OTAVideoEntryViewController *controller = [[OTAVideoEntryViewController alloc] initWithNibName:@"OTAVideoEntryViewController" bundle:[NSBundle mainBundle]];
-	controller.entry = entry;
-	[[parent navigationController] pushViewController:controller animated:YES];
-}
 @end

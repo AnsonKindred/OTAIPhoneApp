@@ -27,7 +27,7 @@
     self.title = entry.song;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(youTubeVideoExit:)
+                                             selector:@selector(youtubeVideoExit:)
                                                  name:@"UIMoviePlayerControllerDidExitFullscreenNotification"
                                                object:nil];
     
@@ -46,6 +46,30 @@
     
     [queue addOperation:request];
     [videosListByArtistViewController refreshWithUrl:[global.wordpressDomain stringByAppendingFormat:@"getSongs.php?artistID=%i&excludeSongID=%i", entry.artistID, entry.ID ]];
+    
+    videoID = entry.videoID;
+    NSLog(@"VIDEO ID: %@", videoID);
+    
+    [self updateVideoView];
+    
+    if(OTAYouTube.canAuthorize && ![videoID  isEqual: @""])
+    {
+        [OTAYouTube authenticateThen:@selector(checkIfVideoLiked:auth:error:) delegate:self viewController:self];
+    }
+    
+    if(![videoID isEqual:@""])
+    {
+        [self fetchComments];
+    }
+    else
+    {
+        [commentLabelView setHidden:true];
+        [commentTable setHidden:true];
+        [commentTextField setHidden:true];
+        likeButton.enabled = false;
+        dislikeButton.enabled = false;
+    }
+
 }
 
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -53,6 +77,13 @@
     if (navigationType == UIWebViewNavigationTypeLinkClicked)
     {
         [[UIApplication sharedApplication] openURL:[request URL]];
+        
+        return NO;
+    }
+    else if ( [[[request URL] scheme] isEqualToString:@"callback"] )
+    {
+        NSLog(@"get callback");
+        
         return NO;
     }
     
@@ -100,10 +131,7 @@
     if ([object isKindOfClass:[NSDictionary class]])
     {
         NSDictionary *result = object;
-        videoID = [result valueForKey:@"videoID"];
-        NSLog(@"VIDEO ID: %@", videoID);
         
-        [self updateVideoView];
         
         NSString* descriptionHTML = [NSString stringWithFormat:@"<html> \n"
                                        "<head> \n"
@@ -115,23 +143,6 @@
                                        "</html>", [UIFont fontWithName:@"Helvetica" size:12].familyName, [NSNumber numberWithInt:12], [result valueForKey:@"description"]];
         [descriptionWebView loadHTMLString:descriptionHTML baseURL:nil];
         
-        if(OTAYouTube.canAuthorize && ![videoID  isEqual: @""])
-        {
-            [OTAYouTube authenticateThen:@selector(checkIfVideoLiked:auth:error:) delegate:self viewController:self];
-        }
-        
-        if(![videoID isEqual:@""])
-        {
-            [self fetchComments];
-        }
-        else
-        {
-            [commentLabelView setHidden:true];
-            [commentTable setHidden:true];
-            [commentTextField setHidden:true];
-            likeButton.enabled = false;
-            dislikeButton.enabled = false;
-        }
     }
     else
     {
@@ -143,16 +154,23 @@
 - (void) updateVideoView
 {
     NSString* videoHTML = [NSString stringWithFormat:@"\
-                       <html>\
-                       <head>\
-                       <style type=\"text/css\">\
+           <html>\
+               <head>\
+                   <style type=\"text/css\">\
                        body {background-color:#000; margin:0;}\
-                       </style>\
-                       </head>\
-                       <body>\
-                       <iframe width=\"100%%\" height=\"180px\" src=\"http://www.youtube.com/embed/%@/?modestbranding=1&controls=2&rel=0&iv_load_policy=3&showinfo=0&autoplay=1&playerapiid=ytplayer&version=3\" frameborder=\"0\" allowfullscreen></iframe>\
-                       </body>\
-                       </html>", videoID];
+                   </style>\
+               </head>\
+               <body>\
+                   <iframe width=\"100%%\"\
+                           height=\"180px\"\
+                           src=\"http://www.youtube.com/embed/%@/?modestbranding=1&controls=2&rel=0&iv_load_policy=3&showinfo=0&autoplay=1&playerapiid=ytplayer&version=3\"\
+                           frameborder=\"0\"\
+                           allowfullscreen>\
+                   </iframe>\
+               </body>\
+           </html>",
+            videoID
+       ];
     
     [videoWebView loadHTMLString:videoHTML baseURL:nil];
 }
@@ -161,7 +179,6 @@
 {
     NSLog(@"Fetching comments");
     NSString* urlString = [[@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:videoID] stringByAppendingString:@"/comments?v=2"];
-    NSLog(urlString);
     NSURL *url = [NSURL URLWithString:urlString];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
@@ -262,7 +279,7 @@
 }
 
 
-- (void)youTubeVideoExit:(id)sender
+- (void)youtubeVideoExit:(id)sender
 {
     [[UIApplication sharedApplication] setStatusBarOrientation:UIDeviceOrientationPortrait animated:NO];
 }
