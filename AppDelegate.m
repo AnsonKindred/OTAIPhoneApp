@@ -26,14 +26,8 @@
 		NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
 		if (dictionary != nil)
 		{
-			NSLog(@"Launched from push notification: %@", dictionary);
-			
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message"
-                                                            message:[[dictionary valueForKey:@"aps"] valueForKey:@"alert"]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
+            NSDictionary* data = [dictionary valueForKey:@"data"];
+			[self handleNotification:data];
 		}
 	}
     
@@ -43,12 +37,24 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     NSLog(@"Got a notification");
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message"
-                                                    message:[[userInfo valueForKey:@"aps"] valueForKey:@"alert"]
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
+    NSDictionary* data = [userInfo valueForKey:@"data"];
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message"
+//                                                    message:[data valueForKey:@"alert"]
+//                                                   delegate:nil
+//                                          cancelButtonTitle:@"OK"
+//                                          otherButtonTitles:nil];
+    //[alert show];
+    
+    [self handleNotification:data];
+}
+
+- (void)handleNotification:(NSDictionary*)data
+{
+    EntrySession* entry = [[EntrySession alloc] init:data];
+    
+    VideoEntryViewController *controller = [[VideoEntryViewController alloc] initWithNibName:@"VideoEntryViewController" bundle:[NSBundle mainBundle]];
+	controller.entry = entry;
+	[rootViewController pushViewController:controller animated:YES];
 }
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken

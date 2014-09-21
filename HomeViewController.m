@@ -19,8 +19,8 @@
     
     
     NSDictionary *testNotification = [NSJSONSerialization
-                                      JSONObjectWithData:[@"{'aps':{'alert':'Test alert','sound':'default'}}" dataUsingEncoding:NSUTF8StringEncoding]
-                                      options:0
+                                      JSONObjectWithData:[@"{\"aps\":{\"alert\":\"Test alert\",\"sound\":\"default\"}, \"data\":{\"id\":7630, \"videoID\":\"S72-OEljK5M\", \"song\":\"Davy Brown\", \"artistID\":526, \"artist\":\"Lucero\"}}" dataUsingEncoding:NSUTF8StringEncoding]
+                                      options:NSJSONReadingMutableContainers
                                       error:nil];
     
     [[[UIApplication sharedApplication] delegate]
