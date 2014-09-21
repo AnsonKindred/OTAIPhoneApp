@@ -180,7 +180,7 @@
             </body>\
        </html>";
     videoHTML = [NSString stringWithFormat:videoHTML, webView.frame.size.width, 380.0f, firstVideo, playlistCSV];
-    
+    webView.mediaPlaybackRequiresUserAction = NO;
     [webView loadHTMLString:videoHTML baseURL:[[NSBundle mainBundle] resourceURL]];
 }
 
