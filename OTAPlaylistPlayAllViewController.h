@@ -17,6 +17,8 @@
     NSString* playlistCSV;
     NSString* firstVideo;
     
+    bool goingBack;
+    
     int currentPlayerState, playlistIndex;
 }
 
@@ -24,5 +26,6 @@
 @property (retain) NSMutableArray* playlist;
 @property (retain) NSString* playlistCSV;
 @property (retain) NSString* firstVideo;
+@property bool goingBack;
 
 @end

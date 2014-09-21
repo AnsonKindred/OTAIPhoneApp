@@ -12,17 +12,20 @@
 @implementation OTAHomeViewController
 @synthesize homeCollectionViewController;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    NSDictionary *testNotification = [NSJSONSerialization
+                                      JSONObjectWithData:[@"{'aps':{'alert':'Test alert','sound':'default'}}" dataUsingEncoding:NSUTF8StringEncoding]
+                                      options:0
+                                      error:nil];
+    
+    [[[UIApplication sharedApplication] delegate]
+     application:[UIApplication sharedApplication]
+     didReceiveRemoteNotification:testNotification];
     
     homeCollectionViewController->parent = self;
     self.navigationController.navigationBarHidden = true;

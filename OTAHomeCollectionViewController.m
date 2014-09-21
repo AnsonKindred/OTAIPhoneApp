@@ -97,6 +97,8 @@
             {
                 playAllViewController = [[OTAPlaylistPlayAllViewController alloc] init];
             }
+            playAllViewController.playlist = NULL;
+            playAllViewController.goingBack = false;
             [parent.navigationController pushViewController:playAllViewController animated:true];
     }
 }

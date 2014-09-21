@@ -15,7 +15,7 @@
 
 @implementation OTAPlaylistPlayAllViewController
 
-@synthesize webView, playlistCSV, firstVideo, playlist;
+@synthesize webView, playlistCSV, firstVideo, playlist, goingBack;
 
 - (void)viewDidLoad
 {
@@ -23,46 +23,57 @@
     
     [self.navigationController setNavigationBarHidden:true animated:true];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerExited:)
-                                                 name:@"UIMoviePlayerControllerDidExitFullscreenNotification"
-                                               object:nil];
-    
     self.automaticallyAdjustsScrollViewInsets = NO;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
-    playlistIndex = 0;
-    
-    if (playlist == NULL)
+    if(!goingBack)
     {
-        // No playlist, grab a random one from the server
-        queue = [[NSOperationQueue alloc] init];
+        goingBack = true;
         
-        OTAGlobals* global = [OTAGlobals getInstance];
-        NSURL *url = [NSURL URLWithString:[global.wordpressDomain stringByAppendingString:@"/getRandomPlaylist.php"]];
-        ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playerExited:)
+                                                     name:@"UIMoviePlayerControllerDidExitFullscreenNotification"
+                                                   object:nil];
         
-        [request setDelegate:self];
-        
-        //[request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
-        [queue addOperation:request];
-    }
-    else
-    {
-        firstVideo = [playlist[0] videoID];
-        if ([playlist count] > 1)
+        playlistIndex = 0;
+        NSLog(@"view did load");
+        if (playlist == NULL)
         {
-            playlistCSV = [playlist[1] videoID];
-            for(int i = 2; i < [playlist count]; i++)
-            {
-                playlistCSV = [playlistCSV stringByAppendingFormat:@",%@", [playlist[i] videoID]];
-            }
+            NSLog(@"Loading random playlist");
+            // No playlist, grab a random one from the server
+            queue = [[NSOperationQueue alloc] init];
+            
+            OTAGlobals* global = [OTAGlobals getInstance];
+            NSURL *url = [NSURL URLWithString:[global.wordpressDomain stringByAppendingString:@"/getRandomPlaylist.php"]];
+            ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+            
+            [request setDelegate:self];
+            
+            //[request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
+            [queue addOperation:request];
         }
         else
         {
-            playlistCSV = @"";
+            firstVideo = [playlist[0] videoID];
+            if ([playlist count] > 1)
+            {
+                playlistCSV = [playlist[1] videoID];
+                for(int i = 2; i < [playlist count]; i++)
+                {
+                    playlistCSV = [playlistCSV stringByAppendingFormat:@",%@", [playlist[i] videoID]];
+                }
+            }
+            else
+            {
+                playlistCSV = @"";
+            }
+            
+            [self updateVideoView];
         }
-        
-        [self updateVideoView];
     }
 }
 

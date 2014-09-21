@@ -40,6 +40,17 @@
     return YES;
 }
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    NSLog(@"Got a notification");
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message"
+                                                    message:[[userInfo valueForKey:@"aps"] valueForKey:@"alert"]
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
     NSString *tokenStr = [deviceToken description];

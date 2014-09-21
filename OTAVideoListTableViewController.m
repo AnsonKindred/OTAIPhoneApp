@@ -31,6 +31,7 @@
 {
     OTAPlaylistPlayAllViewController *controller = [[OTAPlaylistPlayAllViewController alloc] initWithNibName:@"OTAPlaylistPlayAllViewController" bundle:[NSBundle mainBundle]];
     controller.playlist = entries;
+    controller.goingBack = false;
 	[[parent navigationController] pushViewController:controller animated:YES];
 }
 
