@@ -69,29 +69,35 @@
 
 - (void)collectionView:(UICollectionView *)cv didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row == 0)
+    switch(indexPath.row)
     {
-        if(artistListViewController == nil)
-        {
-            artistListViewController = [[OTAArtistListViewController alloc] init];
-        }
-        [parent.navigationController pushViewController:artistListViewController animated:true];
-    }
-    else if(indexPath.row == 1)
-    {
-        if(videoListViewController == nil)
-        {
-            videoListViewController = [[OTAVideoListViewController alloc] init];
-        }
-        [parent.navigationController pushViewController:videoListViewController animated:true];
-    }
-    else if(indexPath.row == 2)
-    {
-        if(playlistViewController == nil)
-        {
-            playlistViewController = [[OTAPlaylistListViewController alloc] init];
-        }
-        [parent.navigationController pushViewController:playlistViewController animated:true];
+        case 0:
+            if(artistListViewController == nil)
+            {
+                artistListViewController = [[OTAArtistListViewController alloc] init];
+            }
+            [parent.navigationController pushViewController:artistListViewController animated:true];
+            break;
+        case 1:
+            if(videoListViewController == nil)
+            {
+                videoListViewController = [[OTAVideoListViewController alloc] init];
+            }
+            [parent.navigationController pushViewController:videoListViewController animated:true];
+            break;
+        case 2:
+            if(playlistViewController == nil)
+            {
+                playlistViewController = [[OTAPlaylistListViewController alloc] init];
+            }
+            [parent.navigationController pushViewController:playlistViewController animated:true];
+            break;
+        case 3:
+            if(playAllViewController == nil)
+            {
+                playAllViewController = [[OTAPlaylistPlayAllViewController alloc] init];
+            }
+            [parent.navigationController pushViewController:playAllViewController animated:true];
     }
 }
 

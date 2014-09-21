@@ -11,10 +11,13 @@
 @interface OTAPlaylistPlayAllViewController : UIViewController <UIWebViewDelegate>
 {
     IBOutlet UIWebView* webView;
+    NSOperationQueue* queue;
     
     NSMutableArray* playlist;
     NSString* playlistCSV;
     NSString* firstVideo;
+    
+    int currentPlayerState, playlistIndex;
 }
 
 @property (strong, nonatomic) IBOutlet UIWebView *webView;

@@ -11,12 +11,14 @@
 #import "OTAArtistListViewController.h"
 #import "OTAVideoListViewController.h"
 #import "OTAPlaylistListViewController.h"
+#import "OTAPlaylistPlayAllViewController.h"
 
 @interface OTAHomeCollectionViewController : UICollectionViewController <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout> {
     IBOutlet UICollectionView *collectionView;
     OTAArtistListViewController* artistListViewController;
     OTAVideoListViewController* videoListViewController;
     OTAPlaylistListViewController* playlistViewController;
+    OTAPlaylistPlayAllViewController* playAllViewController;
     
     @public
     UIViewController* parent;
