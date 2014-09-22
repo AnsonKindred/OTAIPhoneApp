@@ -27,7 +27,8 @@
 		if (dictionary != nil)
 		{
             NSDictionary* data = [dictionary valueForKey:@"data"];
-			[self handleNotification:data];
+            entry = [[EntrySession alloc] init:data];
+			[self handleNotification];
 		}
 	}
     
@@ -38,20 +39,25 @@
 {
     NSLog(@"Got a notification");
     NSDictionary* data = [userInfo valueForKey:@"data"];
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message"
-//                                                    message:[data valueForKey:@"alert"]
-//                                                   delegate:nil
-//                                          cancelButtonTitle:@"OK"
-//                                          otherButtonTitles:nil];
-    //[alert show];
-    
-    [self handleNotification:data];
+    entry = [[EntrySession alloc] init:data];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"New Release!"
+                                                    message:[[data valueForKey:@"song"] stringByAppendingFormat:@" by %@",[data valueForKey:@"artist"]]
+                                                   delegate:self
+                                          cancelButtonTitle:@"No thanks"
+                                          otherButtonTitles:@"Check it out",nil];
+    [alert show];
 }
 
-- (void)handleNotification:(NSDictionary*)data
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    EntrySession* entry = [[EntrySession alloc] init:data];
-    
+    if (buttonIndex == 1)
+    {
+        [self handleNotification];
+    }
+}
+
+- (void)handleNotification
+{
     VideoEntryViewController *controller = [[VideoEntryViewController alloc] initWithNibName:@"VideoEntryViewController" bundle:[NSBundle mainBundle]];
 	controller.entry = entry;
 	[rootViewController pushViewController:controller animated:YES];

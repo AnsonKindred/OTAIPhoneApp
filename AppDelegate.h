@@ -11,6 +11,8 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate> {
     NavigationController* rootViewController;
+    
+    EntrySession* entry;
 }
 
 @property (strong, nonatomic) UIWindow *window;
