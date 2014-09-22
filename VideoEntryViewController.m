@@ -184,6 +184,7 @@
     
     [request setDelegate:self];
     [request setDidFinishSelector:@selector(displayComments:)];
+    [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
     
     [queue addOperation:request];
 }

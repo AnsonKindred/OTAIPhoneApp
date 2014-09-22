@@ -53,7 +53,6 @@
             
             [request setDelegate:self];
             
-            //[request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
             [queue addOperation:request];
         }
         else

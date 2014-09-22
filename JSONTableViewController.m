@@ -19,7 +19,7 @@ static const int POSTS_PER_PAGE = 20;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
- 
+    
     // register observer for contentSize change
     [self.tableView addObserver:self forKeyPath:@"contentSize" options:(NSKeyValueObservingOptionNew |
                                                                         NSKeyValueObservingOptionOld) context:NULL];
@@ -47,7 +47,7 @@ static const int POSTS_PER_PAGE = 20;
     feed_url = [global.wordpressDomain stringByAppendingFormat:@"getSongs.php?posts_per_page=%i", POSTS_PER_PAGE];
     [feed_url retain];
     
-    //[ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
+    [ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
     //[[ASIDownloadCache sharedCache] setShouldRespectCacheControlHeaders:NO];
 }
 
@@ -94,8 +94,8 @@ static const int POSTS_PER_PAGE = 20;
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
     [request setDelegate:self];
-    
     [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
+    
     [queue addOperation:request];
 }
 

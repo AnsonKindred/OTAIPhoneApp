@@ -13,7 +13,7 @@
 
 - (void)viewDidLoad
 {
-    [self.navigationController setNavigationBarHidden:false animated:true];
+    [super viewDidLoad];
     
     self.title = @"Videos";
     tableViewController->parent = self;
@@ -28,12 +28,12 @@
     {
         [tableViewController refresh];
     }
-    
-    [super viewDidLoad];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     [self.navigationController setNavigationBarHidden:false animated:true];
 }
 
