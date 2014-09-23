@@ -46,9 +46,6 @@ static const int POSTS_PER_PAGE = 20;
     Globals* global = [Globals getInstance];
     feed_url = [global.wordpressDomain stringByAppendingFormat:@"getSongs.php?posts_per_page=%i", POSTS_PER_PAGE];
     [feed_url retain];
-    
-    [ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
-    //[[ASIDownloadCache sharedCache] setShouldRespectCacheControlHeaders:NO];
 }
 
 // called when content size changes

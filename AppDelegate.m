@@ -32,6 +32,9 @@
 		}
 	}
     
+    // Enable caching
+    [ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
+    
     return YES;
 }
 
