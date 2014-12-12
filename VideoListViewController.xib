@@ -25,7 +25,7 @@
                     </connections>
                 </searchBar>
                 <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="bottom" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" style="plain" separatorStyle="default" sectionIndexMinimumDisplayRowCount="26" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="5">
-                    <rect key="frame" x="0.0" y="107" width="320" height="397"/>
+                    <rect key="frame" x="0.0" y="107" width="320" height="353"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -34,16 +34,29 @@
                         <outlet property="delegate" destination="4" id="6"/>
                     </connections>
                 </tableView>
+                <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="emO-Wu-BQi">
+                    <rect key="frame" x="0.0" y="460" width="320" height="50"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="kaB-aA-M12"/>
+                    </constraints>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="J0j-58-Zmo"/>
+                    </connections>
+                </adBannerView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="5" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="8"/>
                 <constraint firstItem="5" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="9"/>
-                <constraint firstItem="5" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" id="11"/>
                 <constraint firstItem="14" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="23"/>
                 <constraint firstItem="14" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="24"/>
                 <constraint firstItem="14" firstAttribute="top" secondItem="1" secondAttribute="top" constant="63" id="25"/>
+                <constraint firstAttribute="bottom" secondItem="emO-Wu-BQi" secondAttribute="bottom" constant="-6" id="12Z-dh-haK"/>
                 <constraint firstItem="5" firstAttribute="top" secondItem="14" secondAttribute="bottom" id="cYO-GV-OKn"/>
+                <constraint firstItem="emO-Wu-BQi" firstAttribute="top" secondItem="5" secondAttribute="bottom" id="fmw-Ka-s0P"/>
+                <constraint firstItem="emO-Wu-BQi" firstAttribute="trailing" secondItem="5" secondAttribute="trailing" id="l1p-zc-oL8"/>
+                <constraint firstItem="emO-Wu-BQi" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="sZu-1R-Xob"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>

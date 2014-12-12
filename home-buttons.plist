@@ -4,25 +4,25 @@
 <array>
 	<dict>
 		<key>image</key>
-		<string>84.png</string>
+		<string>artist-icon.png</string>
 		<key>label</key>
 		<string>Artists</string>
 	</dict>
 	<dict>
 		<key>label</key>
-		<string>Songs</string>
+		<string>Search</string>
 		<key>image</key>
-		<string>83.png</string>
+		<string>search-icon.png</string>
 	</dict>
 	<dict>
 		<key>image</key>
-		<string>82.png</string>
+		<string>playlist-icon.png</string>
 		<key>label</key>
-		<string>Genres</string>
+		<string>Playlists</string>
 	</dict>
 	<dict>
 		<key>image</key>
-		<string>84.png</string>
+		<string>random-icon.png</string>
 		<key>label</key>
 		<string>Random</string>
 	</dict>
