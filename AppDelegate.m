@@ -13,6 +13,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSLog(@"Did finish launching");
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
@@ -38,6 +39,9 @@
     
     // Enable caching
     [ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
+    
+    rootViewController = [[NavigationController alloc] init];
+    [self.window setRootViewController:rootViewController];
     
     return YES;
 }
@@ -226,8 +230,6 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    rootViewController = [[NavigationController alloc] init];
-    [self.window setRootViewController:rootViewController];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

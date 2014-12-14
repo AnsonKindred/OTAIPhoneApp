@@ -72,25 +72,26 @@
 {
     if (!bannerView.bannerLoaded)
     {
+        NSLog(@"No banner");
         bannerConstraint.constant = -bannerContainer.frame.size.height;
     }
     else
     {
+        NSLog(@"yes banner");
         bannerConstraint.constant = 0;
     }
     [self.view updateConstraintsIfNeeded];
     [self.view layoutIfNeeded];
 }
 
-
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
 {
-    BOOL shouldExecuteAction = true;
-    if (!willLeave && shouldExecuteAction)
-    {
-        // insert code here to suspend any services that might conflict with the advertisement
-    }
-    return shouldExecuteAction;
+    return YES;
+}
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner
+{
+    NSLog(@"Banner action finished or moving to background or something");
 }
 
 - (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
