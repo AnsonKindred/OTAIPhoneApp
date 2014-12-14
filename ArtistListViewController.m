@@ -14,6 +14,8 @@
 #pragma mark -
 #pragma mark View lifecycle
 
+float originalTableHeight;
+
 - (void)viewDidLoad
 {
     [self.navigationController setNavigationBarHidden:false animated:true];
@@ -30,6 +32,47 @@
 {
     [self.navigationController setNavigationBarHidden:false animated:true];
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    originalTableHeight = tableView.bounds.size.height;
+}
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+{
+    [self layoutAnimated:YES];
+}
+
+- (void)layoutAnimated:(BOOL)animated
+{
+    if (!bannerView.bannerLoaded)
+    {
+        tableHeightConstraint.constant = originalTableHeight + bannerView.frame.size.height;
+    }
+    else
+    {
+        tableHeightConstraint.constant = originalTableHeight;
+    }
+    [self.view updateConstraintsIfNeeded];
+    [self.view layoutIfNeeded];
+}
+
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
+{
+    BOOL shouldExecuteAction = true;
+    if (!willLeave && shouldExecuteAction)
+    {
+        // insert code here to suspend any services that might conflict with the advertisement
+    }
+    return shouldExecuteAction;
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    [self layoutAnimated:YES];
+}
+
 
 @end
 

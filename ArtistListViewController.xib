@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1536" identifier="iOS"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ArtistListViewController">
             <connections>
+                <outlet property="bannerView" destination="1nc-Yh-bda" id="Zkm-4z-10l"/>
+                <outlet property="tableHeightConstraint" destination="9CX-ku-DLX" id="c47-Wa-fUJ"/>
+                <outlet property="tableView" destination="2" id="nO2-51-CA9"/>
                 <outlet property="tableViewController" destination="23" id="44"/>
                 <outlet property="view" destination="18" id="45"/>
             </connections>
@@ -17,9 +20,12 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="2">
-                    <rect key="frame" x="0.0" y="107" width="320" height="461"/>
+                    <rect key="frame" x="0.0" y="107" width="320" height="411"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="411" id="9CX-ku-DLX"/>
+                    </constraints>
                     <connections>
                         <outlet property="dataSource" destination="23" id="36"/>
                         <outlet property="delegate" destination="23" id="35"/>
@@ -33,16 +39,30 @@
                         <outlet property="delegate" destination="23" id="43"/>
                     </connections>
                 </searchBar>
+                <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1nc-Yh-bda">
+                    <rect key="frame" x="0.0" y="518" width="320" height="50"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="9PQ-9k-ZHp"/>
+                    </constraints>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="DZ8-6Z-h8u"/>
+                    </connections>
+                </adBannerView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="2" firstAttribute="leading" secondItem="18" secondAttribute="leading" id="19"/>
                 <constraint firstItem="2" firstAttribute="trailing" secondItem="18" secondAttribute="trailing" id="20"/>
-                <constraint firstItem="2" firstAttribute="bottom" secondItem="18" secondAttribute="bottom" id="22"/>
                 <constraint firstItem="27" firstAttribute="top" secondItem="18" secondAttribute="top" constant="63" id="30"/>
                 <constraint firstItem="27" firstAttribute="trailing" secondItem="18" secondAttribute="trailing" id="31"/>
                 <constraint firstItem="27" firstAttribute="leading" secondItem="18" secondAttribute="leading" id="32"/>
                 <constraint firstItem="2" firstAttribute="top" secondItem="27" secondAttribute="bottom" id="33"/>
+                <constraint firstItem="2" firstAttribute="top" secondItem="27" secondAttribute="bottom" id="JN9-AR-JKn"/>
+                <constraint firstItem="1nc-Yh-bda" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="MJT-gT-dq8"/>
+                <constraint firstItem="1nc-Yh-bda" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="Z0S-8L-eeG"/>
+                <constraint firstAttribute="bottom" secondItem="1nc-Yh-bda" secondAttribute="bottom" id="m1i-Am-v2V"/>
+                <constraint firstItem="1nc-Yh-bda" firstAttribute="top" secondItem="2" secondAttribute="bottom" priority="1" id="um1-ix-Enq"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>

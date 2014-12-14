@@ -7,12 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iAd/iAd.h>
 #import "VideoListTableViewController.h"
 #import "VideoEntryViewController.h"
 
-
 @interface VideoListViewController : UIViewController {
     IBOutlet VideoListTableViewController* tableViewController;
+    IBOutlet UITableView* tableView;
+    IBOutlet ADBannerView* bannerView;
+    IBOutlet NSLayoutConstraint* tableHeightConstraint;
     
 @public
     int filterByGenre;

@@ -7,11 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iAd/iAd.h>
 #import "PlaylistListTableViewController.h"
 
 @interface PlaylistListViewController : UIViewController
 {
     IBOutlet PlaylistListTableViewController *tableViewController;
+    IBOutlet UITableView* tableView;
+    IBOutlet ADBannerView* bannerView;
+    IBOutlet NSLayoutConstraint* tableHeightConstraint;
 }
 
 @property (atomic, strong) IBOutlet PlaylistListTableViewController* tableViewController;
