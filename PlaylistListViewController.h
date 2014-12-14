@@ -9,15 +9,26 @@
 #import <UIKit/UIKit.h>
 #import <iAd/iAd.h>
 #import "PlaylistListTableViewController.h"
+#import "VideoListViewController.h"
 
-@interface PlaylistListViewController : UIViewController
+@class PlaylistListViewController;
+
+@protocol PlaylistListViewControllerDelegate <NSObject>
+- (void)setSharedAdView:(ADBannerView *)adView;
+@end
+
+@interface PlaylistListViewController : UIViewController <ADBannerViewDelegate, VideoListViewControllerDelegate>
 {
     IBOutlet PlaylistListTableViewController *tableViewController;
     IBOutlet UITableView* tableView;
-    IBOutlet ADBannerView* bannerView;
-    IBOutlet NSLayoutConstraint* tableHeightConstraint;
+    IBOutlet UIView* bannerContainer;
+    IBOutlet NSLayoutConstraint* bannerConstraint;
+
+@public
+    ADBannerView* bannerView;
 }
 
 @property (atomic, strong) IBOutlet PlaylistListTableViewController* tableViewController;
+@property (nonatomic, strong) id <PlaylistListViewControllerDelegate> delegate;
 
 @end

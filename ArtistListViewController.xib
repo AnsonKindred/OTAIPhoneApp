@@ -7,8 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ArtistListViewController">
             <connections>
-                <outlet property="bannerView" destination="1nc-Yh-bda" id="Zkm-4z-10l"/>
-                <outlet property="tableHeightConstraint" destination="9CX-ku-DLX" id="c47-Wa-fUJ"/>
+                <outlet property="bannerConstraint" destination="buu-Ra-icH" id="l3Z-g5-HOk"/>
+                <outlet property="bannerContainer" destination="puy-FE-w0c" id="el5-NE-VVx"/>
                 <outlet property="tableView" destination="2" id="nO2-51-CA9"/>
                 <outlet property="tableViewController" destination="23" id="44"/>
                 <outlet property="view" destination="18" id="45"/>
@@ -24,7 +24,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="411" id="9CX-ku-DLX"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="1" constant="411" id="9CX-ku-DLX"/>
                     </constraints>
                     <connections>
                         <outlet property="dataSource" destination="23" id="36"/>
@@ -39,16 +39,14 @@
                         <outlet property="delegate" destination="23" id="43"/>
                     </connections>
                 </searchBar>
-                <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1nc-Yh-bda">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="puy-FE-w0c" userLabel="Banner Container">
                     <rect key="frame" x="0.0" y="518" width="320" height="50"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="50" id="9PQ-9k-ZHp"/>
+                        <constraint firstAttribute="height" constant="50" id="4Ue-ns-ozl"/>
                     </constraints>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="DZ8-6Z-h8u"/>
-                    </connections>
-                </adBannerView>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
@@ -58,11 +56,12 @@
                 <constraint firstItem="27" firstAttribute="trailing" secondItem="18" secondAttribute="trailing" id="31"/>
                 <constraint firstItem="27" firstAttribute="leading" secondItem="18" secondAttribute="leading" id="32"/>
                 <constraint firstItem="2" firstAttribute="top" secondItem="27" secondAttribute="bottom" id="33"/>
+                <constraint firstAttribute="trailing" secondItem="puy-FE-w0c" secondAttribute="trailing" id="FR4-Cr-qxr"/>
                 <constraint firstItem="2" firstAttribute="top" secondItem="27" secondAttribute="bottom" id="JN9-AR-JKn"/>
-                <constraint firstItem="1nc-Yh-bda" firstAttribute="trailing" secondItem="2" secondAttribute="trailing" id="MJT-gT-dq8"/>
-                <constraint firstItem="1nc-Yh-bda" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="Z0S-8L-eeG"/>
-                <constraint firstAttribute="bottom" secondItem="1nc-Yh-bda" secondAttribute="bottom" id="m1i-Am-v2V"/>
-                <constraint firstItem="1nc-Yh-bda" firstAttribute="top" secondItem="2" secondAttribute="bottom" priority="1" id="um1-ix-Enq"/>
+                <constraint firstItem="puy-FE-w0c" firstAttribute="top" secondItem="2" secondAttribute="bottom" id="KG6-U3-DNO"/>
+                <constraint firstItem="2" firstAttribute="top" secondItem="27" secondAttribute="bottom" id="PCl-Xq-jhs"/>
+                <constraint firstItem="puy-FE-w0c" firstAttribute="leading" secondItem="18" secondAttribute="leading" id="RpP-c4-7Lf"/>
+                <constraint firstAttribute="bottom" secondItem="puy-FE-w0c" secondAttribute="bottom" id="buu-Ra-icH"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>

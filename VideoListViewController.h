@@ -11,16 +11,24 @@
 #import "VideoListTableViewController.h"
 #import "VideoEntryViewController.h"
 
-@interface VideoListViewController : UIViewController {
+@class VideoListViewController;
+
+@protocol VideoListViewControllerDelegate <NSObject>
+- (void)setSharedAdView:(ADBannerView *)adView;
+@end
+
+@interface VideoListViewController : UIViewController <ADBannerViewDelegate> {
     IBOutlet VideoListTableViewController* tableViewController;
     IBOutlet UITableView* tableView;
-    IBOutlet ADBannerView* bannerView;
-    IBOutlet NSLayoutConstraint* tableHeightConstraint;
+    IBOutlet UIView* bannerContainer;
+    IBOutlet NSLayoutConstraint* bannerConstraint;
     
 @public
     int filterByGenre;
+    ADBannerView* bannerView;
 }
 
 @property (atomic, strong) IBOutlet VideoListTableViewController* tableViewController;
+@property (nonatomic, strong) id <VideoListViewControllerDelegate> delegate;
 
 @end

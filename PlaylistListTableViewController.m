@@ -13,6 +13,7 @@
 #import "Comment.h"
 #import "VideoListViewController.h"
 #import "EntryGenre.h"
+#import "PlaylistListViewController.h"
 
 @implementation PlaylistListTableViewController
 
@@ -29,6 +30,9 @@
     }
     VideoListViewController* videoListViewController = [[VideoListViewController alloc] initWithNibName:@"VideoListViewController" bundle:[NSBundle mainBundle]];
 	videoListViewController->filterByGenre = entry.ID;
+    videoListViewController->bannerView = ((PlaylistListViewController*)parent)->bannerView;
+    videoListViewController->bannerView.delegate = ((PlaylistListViewController*)parent);
+    videoListViewController.delegate = ((PlaylistListViewController*)parent);
 	[[parent navigationController] pushViewController:videoListViewController animated:YES];
 }
 

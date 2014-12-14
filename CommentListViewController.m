@@ -16,7 +16,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    comments = [[NSMutableArray array] retain];
+    comments = [NSMutableArray array];
     totalRowHeight = 0;
 }
 
@@ -36,10 +36,20 @@
 {
     Comment* comment = [comments objectAtIndex:indexPath.row];
     UITableViewCell* cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
-  
-    CGSize size = [comment.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(cell.frame.size.width - 20, 500)];
     
-    return size.height + 35;
+    CGSize maximumLabelSize = CGSizeMake(cell.frame.size.width-20, MAXFLOAT);
+    
+    NSStringDrawingOptions options = NSStringDrawingTruncatesLastVisibleLine |
+    NSStringDrawingUsesLineFragmentOrigin;
+    
+    NSDictionary *attr = @{NSFontAttributeName: [UIFont systemFontOfSize:13]};
+    CGRect size = [comment.text boundingRectWithSize:maximumLabelSize
+                                              options:options
+                                           attributes:attr
+                                              context:nil];
+    //CGSize size = [comment.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(cell.frame.size.width - 20, 500)];
+    
+    return ceilf(size.size.height) + 35;
 }
 
 // Customize the appearance of table view cells.

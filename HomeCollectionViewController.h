@@ -13,6 +13,8 @@
 #import "PlaylistListViewController.h"
 #import "PlaylistPlayAllViewController.h"
 
+@class HomeViewController;
+
 @interface HomeCollectionViewController : UICollectionViewController <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout> {
     IBOutlet UICollectionView *collectionView;
     ArtistListViewController* artistListViewController;
@@ -21,7 +23,7 @@
     PlaylistPlayAllViewController* playAllViewController;
     
     @public
-    UIViewController* parent;
+    HomeViewController* parent;
 }
 @property(nonatomic, strong) IBOutlet UICollectionView *collectionView;
 @end

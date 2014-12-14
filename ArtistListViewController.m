@@ -11,10 +11,9 @@
 
 @implementation ArtistListViewController
 @synthesize tableViewController;
+@synthesize delegate;
 #pragma mark -
 #pragma mark View lifecycle
-
-float originalTableHeight;
 
 - (void)viewDidLoad
 {
@@ -30,12 +29,33 @@ float originalTableHeight;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     [self.navigationController setNavigationBarHidden:false animated:true];
+    
+    if (bannerView == nil)
+    {
+        NSLog(@"creating new banner view");
+        bannerView = [[ADBannerView alloc] initWithFrame:CGRectZero];
+    }
+    bannerView.delegate = self;
+    [bannerContainer addSubview:bannerView];
+    
+    [self layoutAnimated:YES];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+-(void) viewWillDisappear:(BOOL)animated
 {
-    originalTableHeight = tableView.bounds.size.height;
+    bannerView.delegate = nil;
+    [bannerView removeFromSuperview];
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound)
+    {
+        // back button was pressed.  We know this is true because self is no longer
+        // in the navigation stack.
+        [self.delegate setSharedAdView:bannerView];
+    }
+    bannerView = nil;
+    [super viewWillDisappear:animated];
 }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner
@@ -47,11 +67,11 @@ float originalTableHeight;
 {
     if (!bannerView.bannerLoaded)
     {
-        tableHeightConstraint.constant = originalTableHeight + bannerView.frame.size.height;
+        bannerConstraint.constant = -bannerContainer.frame.size.height;
     }
     else
     {
-        tableHeightConstraint.constant = originalTableHeight;
+        bannerConstraint.constant = 0;
     }
     [self.view updateConstraintsIfNeeded];
     [self.view layoutIfNeeded];

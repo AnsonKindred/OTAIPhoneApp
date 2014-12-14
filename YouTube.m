@@ -53,7 +53,7 @@ NSString* developerKey = @"AI39si4lqh87sRiuNbPH3kisvTBlKQUrLx5qEFRXB8lTXkKfjh1aV
     Globals* globals = [Globals getInstance];
     NSLog(@"%@", globals.username);
     NSLog(@"%@", globals.likePlaylistID);
-    if(globals.username == nil || globals.username == @"")
+    if(globals.username == nil || [globals.username  isEqual: @""])
     {
         NSLog(@"Fetching user info");
         [YouTube.youTubeServiceGData fetchEntryWithURL:[NSURL URLWithString:@"https://gdata.youtube.com/feeds/api/users/default"]
@@ -155,75 +155,75 @@ NSString* developerKey = @"AI39si4lqh87sRiuNbPH3kisvTBlKQUrLx5qEFRXB8lTXkKfjh1aV
     return service;
 }
 
-+ (EntrySession*) parseVideo:(GDataXMLElement*)video
-{
-    NSString* dataString = [video valueForChild:@"title"];
-    NSArray* data = [dataString componentsSeparatedByString:@"|"];
-    if([data count] == 2)
-    {
-        dataString = data[0];
-    }
-    data = [dataString componentsSeparatedByString:@"\""];
-    NSString *artist;
-    NSString *song;
-    if([data count] >= 2)
-    {
-        artist = data[0];
-        song = data[1];
-    }
-    else
-    {
-        data = [dataString componentsSeparatedByString:@"-"];
-        if([data count] >= 2)
-        {
-            artist = data[0];
-            song = data[1];
-            if([song characterAtIndex:0] == ' ')
-            {
-                song = [song substringFromIndex:1];
-            }
-        }
-        else
-        {
-            artist = @"";
-            song = dataString;
-        }
-    }
-    
-    NSString* youtubeVideoID = @"";
-    NSString* videoUrl = @"";
-    NSError* error = nil;
-    NSArray* playerNode = [video nodesForXPath:@"./media:group/media:player" error:&error];
-    
-    if([playerNode count] > 0)
-    {
-        GDataXMLNode* attr = [playerNode[0] attributeForName:@"url"];
-        videoUrl = attr.stringValue;
-        
-        if(videoUrl != nil && videoUrl != @"")
-        {
-            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\watch\\?v=([a-zA-Z0-9\\-_]+)(&.*)|$\\b"
-                                                                                   options:NSRegularExpressionCaseInsensitive
-                                                                                     error:&error];
-            NSTextCheckingResult *match = [regex firstMatchInString:videoUrl
-                                                            options:0
-                                                              range:NSMakeRange(0, [videoUrl length])];
-            
-            if (!NSEqualRanges([match rangeAtIndex:1], NSMakeRange(NSNotFound, 0)) && [match rangeAtIndex:1].location != 0)
-            {
-                youtubeVideoID = [videoUrl substringWithRange:[match rangeAtIndex:1]];
-                if (!NSEqualRanges([match rangeAtIndex:2], NSMakeRange(NSNotFound, 0)) && [match rangeAtIndex:2].location != 0)
-                {
-                    videoUrl = [videoUrl stringByReplacingOccurrencesOfString:[videoUrl substringWithRange:[match rangeAtIndex:2]] withString:@""];
-                }
-            }
-        }
-    } 
-    
-    return [[EntrySession alloc] init:artist
-                                song:song
-                            videoUrl:videoUrl
-                      youtubeVideoID:youtubeVideoID];
-}
+//+ (EntrySession*) parseVideo:(GDataXMLElement*)video
+//{
+//    NSString* dataString = [video valueForChild:@"title"];
+//    NSArray* data = [dataString componentsSeparatedByString:@"|"];
+//    if([data count] == 2)
+//    {
+//        dataString = data[0];
+//    }
+//    data = [dataString componentsSeparatedByString:@"\""];
+//    NSString *artist;
+//    NSString *song;
+//    if([data count] >= 2)
+//    {
+//        artist = data[0];
+//        song = data[1];
+//    }
+//    else
+//    {
+//        data = [dataString componentsSeparatedByString:@"-"];
+//        if([data count] >= 2)
+//        {
+//            artist = data[0];
+//            song = data[1];
+//            if([song characterAtIndex:0] == ' ')
+//            {
+//                song = [song substringFromIndex:1];
+//            }
+//        }
+//        else
+//        {
+//            artist = @"";
+//            song = dataString;
+//        }
+//    }
+//    
+//    NSString* youtubeVideoID = @"";
+//    NSString* videoUrl = @"";
+//    NSError* error = nil;
+//    NSArray* playerNode = [video nodesForXPath:@"./media:group/media:player" error:&error];
+//    
+//    if([playerNode count] > 0)
+//    {
+//        GDataXMLNode* attr = [playerNode[0] attributeForName:@"url"];
+//        videoUrl = attr.stringValue;
+//        
+//        if(videoUrl != nil && ![videoUrl isEqualToString:@""])
+//        {
+//            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\watch\\?v=([a-zA-Z0-9\\-_]+)(&.*)|$\\b"
+//                                                                                   options:NSRegularExpressionCaseInsensitive
+//                                                                                     error:&error];
+//            NSTextCheckingResult *match = [regex firstMatchInString:videoUrl
+//                                                            options:0
+//                                                              range:NSMakeRange(0, [videoUrl length])];
+//            
+//            if (!NSEqualRanges([match rangeAtIndex:1], NSMakeRange(NSNotFound, 0)) && [match rangeAtIndex:1].location != 0)
+//            {
+//                youtubeVideoID = [videoUrl substringWithRange:[match rangeAtIndex:1]];
+//                if (!NSEqualRanges([match rangeAtIndex:2], NSMakeRange(NSNotFound, 0)) && [match rangeAtIndex:2].location != 0)
+//                {
+//                    videoUrl = [videoUrl stringByReplacingOccurrencesOfString:[videoUrl substringWithRange:[match rangeAtIndex:2]] withString:@""];
+//                }
+//            }
+//        }
+//    } 
+//    
+//    return [[EntrySession alloc] init:artist
+//                                song:song
+//                            videoUrl:videoUrl
+//                      youtubeVideoID:youtubeVideoID];
+//}
 
 @end

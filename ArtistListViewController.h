@@ -9,12 +9,22 @@
 #import "JSONTableViewController.h"
 #import "ArtistListTableViewController.h"
 
-@interface ArtistListViewController : UIViewController {
+@class ArtistListViewController;
+
+@protocol ArtistListViewControllerDelegate <NSObject>
+- (void)setSharedAdView:(ADBannerView *)adView;
+@end
+
+@interface ArtistListViewController : UIViewController <ADBannerViewDelegate> {
     IBOutlet ArtistListTableViewController *tableViewController;
     int lastEntryCount, page;
     IBOutlet UITableView* tableView;
-    IBOutlet ADBannerView* bannerView;
-    IBOutlet NSLayoutConstraint* tableHeightConstraint;
+    IBOutlet UIView* bannerContainer;
+    IBOutlet NSLayoutConstraint* bannerConstraint;
+
+@public
+    ADBannerView* bannerView;
 }
 @property (atomic, strong) IBOutlet ArtistListTableViewController* tableViewController;
+@property (nonatomic, strong) id <ArtistListViewControllerDelegate> delegate;
 @end

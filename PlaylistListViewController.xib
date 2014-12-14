@@ -7,8 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaylistListViewController">
             <connections>
-                <outlet property="bannerView" destination="xTK-Yb-m35" id="hce-ld-IxR"/>
-                <outlet property="tableHeightConstraint" destination="ar9-NX-0px" id="mab-Kq-AQV"/>
+                <outlet property="bannerConstraint" destination="VGA-Rx-FtY" id="Oso-53-BJ7"/>
+                <outlet property="bannerContainer" destination="yh3-0v-4Su" id="3D3-kR-z3w"/>
                 <outlet property="tableView" destination="56" id="SMB-zu-I2R"/>
                 <outlet property="tableViewController" destination="55" id="88"/>
                 <outlet property="view" destination="1" id="3"/>
@@ -32,7 +32,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="411" id="ar9-NX-0px" userLabel="Height - (411) - Table View"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="1" constant="411" id="ar9-NX-0px" userLabel="Height - (411) - Table View"/>
                     </constraints>
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     <connections>
@@ -40,16 +40,14 @@
                         <outlet property="delegate" destination="55" id="57"/>
                     </connections>
                 </tableView>
-                <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xTK-Yb-m35">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yh3-0v-4Su" userLabel="Banner Container">
                     <rect key="frame" x="0.0" y="518" width="320" height="50"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="50" id="oty-9w-bkL"/>
+                        <constraint firstAttribute="height" constant="50" id="v6Q-zs-lkn"/>
                     </constraints>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="UmM-1T-wJr"/>
-                    </connections>
-                </adBannerView>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
@@ -59,10 +57,10 @@
                 <constraint firstItem="64" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="74"/>
                 <constraint firstItem="64" firstAttribute="top" secondItem="1" secondAttribute="top" constant="63" id="77"/>
                 <constraint firstItem="56" firstAttribute="top" secondItem="64" secondAttribute="bottom" id="0ec-pb-F4d"/>
-                <constraint firstAttribute="bottom" secondItem="xTK-Yb-m35" secondAttribute="bottom" priority="1" id="9Lf-5T-wVB"/>
-                <constraint firstItem="xTK-Yb-m35" firstAttribute="top" secondItem="56" secondAttribute="bottom" id="L1J-lU-lFq"/>
-                <constraint firstItem="xTK-Yb-m35" firstAttribute="leading" secondItem="56" secondAttribute="leading" id="Wwl-7e-FUv"/>
-                <constraint firstItem="xTK-Yb-m35" firstAttribute="trailing" secondItem="56" secondAttribute="trailing" id="e4N-4n-lRd"/>
+                <constraint firstItem="yh3-0v-4Su" firstAttribute="top" secondItem="56" secondAttribute="bottom" id="Qwb-fQ-2z9"/>
+                <constraint firstAttribute="bottom" secondItem="yh3-0v-4Su" secondAttribute="bottom" id="VGA-Rx-FtY"/>
+                <constraint firstItem="yh3-0v-4Su" firstAttribute="leading" secondItem="56" secondAttribute="leading" id="iZZ-ER-wE4"/>
+                <constraint firstItem="yh3-0v-4Su" firstAttribute="trailing" secondItem="56" secondAttribute="trailing" id="vbX-3X-Z3d"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>

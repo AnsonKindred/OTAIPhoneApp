@@ -89,7 +89,7 @@
     if (error)
     {
         /* JSON was malformed, act appropriately here */
-        NSLog(error.description);
+        NSLog(@"%@", error.description);
     }
     
     if ([object isKindOfClass:[NSArray class]])
@@ -114,11 +114,10 @@
     }
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView
 {
-    NSLog(@"web view finished loading");
     // Register the setPlayerState method to be callable from the webview's javascript context
-    JSContext *context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"]; // Undocumented access
+    JSContext *context = [aWebView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"]; // Undocumented access, shhhh
     context[@"setPlayerState"] = ^(NSNumber *state) {
         [self setPlayerState:[state intValue]];
     };
@@ -137,7 +136,7 @@
     // When the user intentionally exits the player the state is always set to paused
     // When the player automatically closes to open the next song (fuck you apple) it is not paused
     // If the user intentionally exited, go back to the previous view.
-    NSLog(@"playerState: %i", currentPlayerState);
+    //NSLog(@"playerState: %i", currentPlayerState);
     if (currentPlayerState == 2 || (currentPlayerState == 0 && playlistIndex == [playlist count] - 1))
     {
         [[NSNotificationCenter defaultCenter] removeObserver:self];

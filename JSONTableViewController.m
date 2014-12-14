@@ -24,7 +24,7 @@ static const int POSTS_PER_PAGE = 20;
     [self.tableView addObserver:self forKeyPath:@"contentSize" options:(NSKeyValueObservingOptionNew |
                                                                         NSKeyValueObservingOptionOld) context:NULL];
     
-    entries = [[NSMutableArray array] retain];
+    entries = [NSMutableArray array];
     queue = [[NSOperationQueue alloc] init];
     
     page = 1;
@@ -45,7 +45,7 @@ static const int POSTS_PER_PAGE = 20;
     
     Globals* global = [Globals getInstance];
     feed_url = [global.wordpressDomain stringByAppendingFormat:@"getSongs.php?posts_per_page=%i", POSTS_PER_PAGE];
-    [feed_url retain];
+    //[feed_url retain];
 }
 
 // called when content size changes
@@ -63,7 +63,9 @@ static const int POSTS_PER_PAGE = 20;
         [parent correctLayout];
     }
 }
-
+- (void)correctLayout
+{
+}
 - (void)viewDidUnload
 {
     self.filteredEntries = nil;
@@ -80,7 +82,7 @@ static const int POSTS_PER_PAGE = 20;
 - (void)refreshWithUrl:(NSString*)url
 {
     feed_url = url;
-    [feed_url retain];
+    //[feed_url retain];
     [self refresh];
 }
 
@@ -109,7 +111,7 @@ static const int POSTS_PER_PAGE = 20;
     if (error)
     {
         /* JSON was malformed, act appropriately here */
-        NSLog(error.description);
+        NSLog(@"%@", error.description);
     }
     
     if ([object isKindOfClass:[NSArray class]])

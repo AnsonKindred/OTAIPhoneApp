@@ -8,6 +8,7 @@
 
 #import "ArtistListTableViewController.h"
 #import "VideoEntryViewController.h"
+#import "ArtistListViewController.h"
 
 @implementation ArtistListTableViewController
 
@@ -24,6 +25,7 @@
     }
 	VideoEntryViewController *controller = [[VideoEntryViewController alloc] initWithNibName:@"VideoEntryViewController" bundle:[NSBundle mainBundle]];
 	controller.entry = entry;
+    
 	[[parent navigationController] pushViewController:controller animated:YES];
 }
 

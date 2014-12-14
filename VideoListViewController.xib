@@ -7,8 +7,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VideoListViewController">
             <connections>
-                <outlet property="bannerView" destination="emO-Wu-BQi" id="liy-is-Wm2"/>
-                <outlet property="tableHeightConstraint" destination="y7x-wO-elk" id="FK9-Bm-hqz"/>
+                <outlet property="bannerConstraint" destination="Vor-dn-YUc" id="m8F-nh-9x9"/>
+                <outlet property="bannerContainer" destination="9DY-Oa-EET" id="8xV-rv-A4X"/>
                 <outlet property="tableView" destination="5" id="6Xi-Kc-VS5"/>
                 <outlet property="tableViewController" destination="4" id="13"/>
                 <outlet property="view" destination="1" id="3"/>
@@ -32,7 +32,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="347" id="y7x-wO-elk"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="1" constant="347" id="y7x-wO-elk"/>
                     </constraints>
                     <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     <connections>
@@ -40,16 +40,14 @@
                         <outlet property="delegate" destination="4" id="6"/>
                     </connections>
                 </tableView>
-                <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="emO-Wu-BQi">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9DY-Oa-EET" userLabel="Banner Container">
                     <rect key="frame" x="0.0" y="454" width="320" height="50"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="50" id="kaB-aA-M12"/>
+                        <constraint firstAttribute="height" constant="50" id="Bvb-3g-Ax9"/>
                     </constraints>
-                    <connections>
-                        <outlet property="delegate" destination="-1" id="J0j-58-Zmo"/>
-                    </connections>
-                </adBannerView>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
@@ -59,12 +57,11 @@
                 <constraint firstItem="14" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="24"/>
                 <constraint firstItem="14" firstAttribute="top" secondItem="1" secondAttribute="top" constant="63" id="25"/>
                 <constraint firstItem="5" firstAttribute="top" secondItem="14" secondAttribute="bottom" id="DTA-J6-eIN"/>
-                <constraint firstItem="emO-Wu-BQi" firstAttribute="top" secondItem="5" secondAttribute="bottom" id="Wdn-tF-mPK"/>
+                <constraint firstItem="9DY-Oa-EET" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="DbA-X5-G1f"/>
+                <constraint firstItem="9DY-Oa-EET" firstAttribute="trailing" secondItem="5" secondAttribute="trailing" id="LBF-Va-F8q"/>
+                <constraint firstAttribute="bottom" secondItem="9DY-Oa-EET" secondAttribute="bottom" id="Vor-dn-YUc"/>
+                <constraint firstItem="9DY-Oa-EET" firstAttribute="top" secondItem="5" secondAttribute="bottom" id="cMg-fw-y8g"/>
                 <constraint firstItem="5" firstAttribute="top" secondItem="14" secondAttribute="bottom" id="cYO-GV-OKn"/>
-                <constraint firstItem="emO-Wu-BQi" firstAttribute="top" secondItem="5" secondAttribute="bottom" id="fmw-Ka-s0P"/>
-                <constraint firstItem="emO-Wu-BQi" firstAttribute="trailing" secondItem="5" secondAttribute="trailing" id="l1p-zc-oL8"/>
-                <constraint firstItem="emO-Wu-BQi" firstAttribute="bottom" secondItem="1" secondAttribute="bottom" priority="1" id="qgf-7D-Iob"/>
-                <constraint firstItem="emO-Wu-BQi" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="sZu-1R-Xob"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>

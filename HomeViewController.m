@@ -12,21 +12,24 @@
 @implementation HomeViewController
 @synthesize homeCollectionViewController;
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    
+    NSLog(@"Does this happen lots");
     // For testing remote notifications in the simulator
-    NSDictionary *testNotification = [NSJSONSerialization
-                                      JSONObjectWithData:[@"{\"aps\":{\"alert\":\"Test alert\",\"sound\":\"default\"}, \"data\":{\"id\":7630, \"videoID\":\"S72-OEljK5M\", \"song\":\"Davy Brown\", \"artistID\":526, \"artist\":\"Lucero\"}}" dataUsingEncoding:NSUTF8StringEncoding]
-                                      options:NSJSONReadingMutableContainers
-                                      error:nil];
+//    NSDictionary *testNotification = [NSJSONSerialization
+//                                      JSONObjectWithData:[@"{\"aps\":{\"alert\":\"Test alert\",\"sound\":\"default\"}, \"data\":{\"id\":7630, \"videoID\":\"S72-OEljK5M\", \"song\":\"Davy Brown\", \"artistID\":526, \"artist\":\"Lucero\"}}" dataUsingEncoding:NSUTF8StringEncoding]
+//                                      options:NSJSONReadingMutableContainers
+//                                      error:nil];
+//    
+//    [[[UIApplication sharedApplication] delegate]
+//     application:[UIApplication sharedApplication]
+//     didReceiveRemoteNotification:testNotification];
     
-    [[[UIApplication sharedApplication] delegate]
-     application:[UIApplication sharedApplication]
-     didReceiveRemoteNotification:testNotification];
+    NSLog(@"creating new banner view");
+    sharedAdView = [[ADBannerView alloc] initWithFrame:CGRectZero];
+    sharedAdView.delegate = self;
     
     homeCollectionViewController->parent = self;
     self.navigationController.navigationBarHidden = true;
@@ -48,7 +51,19 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(youTubeVideoExit:)
                                                  name:@"UIMoviePlayerControllerDidExitFullscreenNotification"
-                                               object:nil];}
+                                               object:nil];
+}
+
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
+{
+    return NO;
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    
+}
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
@@ -91,6 +106,13 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)setSharedAdView:(ADBannerView *)adView
+{
+    sharedAdView.delegate = nil;
+    sharedAdView = adView;
+    sharedAdView.delegate = self;
 }
 
 @end

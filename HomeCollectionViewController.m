@@ -7,6 +7,7 @@
 //
 
 #import "HomeCollectionViewController.h"
+#import "HomeViewController.h"
 
 @implementation HomeCollectionViewController
 @synthesize collectionView;
@@ -76,21 +77,33 @@
             {
                 artistListViewController = [[ArtistListViewController alloc] init];
             }
-            [parent.navigationController pushViewController:artistListViewController animated:true];
+            artistListViewController->bannerView = parent->sharedAdView;
+            artistListViewController->bannerView.delegate = artistListViewController;
+            parent->sharedAdView = nil;
+            artistListViewController.delegate = parent;
+            [((UIViewController*)parent).navigationController pushViewController:artistListViewController animated:true];
             break;
         case 1:
             if(videoListViewController == nil)
             {
                 videoListViewController = [[VideoListViewController alloc] init];
             }
-            [parent.navigationController pushViewController:videoListViewController animated:true];
+            videoListViewController->bannerView = parent->sharedAdView;
+            videoListViewController->bannerView.delegate = videoListViewController;
+            parent->sharedAdView = nil;
+            videoListViewController.delegate = parent;
+            [((UIViewController*)parent).navigationController pushViewController:videoListViewController animated:true];
             break;
         case 2:
             if(playlistViewController == nil)
             {
                 playlistViewController = [[PlaylistListViewController alloc] init];
             }
-            [parent.navigationController pushViewController:playlistViewController animated:true];
+            playlistViewController->bannerView = parent->sharedAdView;
+            playlistViewController->bannerView.delegate = playlistViewController;
+            parent->sharedAdView = nil;
+            playlistViewController.delegate = parent;
+            [((UIViewController*)parent).navigationController pushViewController:playlistViewController animated:true];
             break;
         case 3:
             if(playAllViewController == nil)
@@ -99,7 +112,7 @@
             }
             playAllViewController.playlist = NULL;
             playAllViewController.goingBack = false;
-            [parent.navigationController pushViewController:playAllViewController animated:true];
+            [((UIViewController*)parent).navigationController pushViewController:playAllViewController animated:true];
     }
 }
 

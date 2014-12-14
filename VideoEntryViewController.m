@@ -107,7 +107,6 @@
         
         aWebView.frame = frame;       // Set the scrollView contentHeight back to the frame itself.
         
-        NSLog(@"description loaded");
         [self correctLayout];
     }
 }
@@ -115,7 +114,7 @@
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     NSData* returnedData = [request responseData];
-    NSLog(@"%@", [[NSString alloc] initWithData:returnedData encoding:NSUTF8StringEncoding]);
+    //NSLog(@"%@", [[NSString alloc] initWithData:returnedData encoding:NSUTF8StringEncoding]);
     NSError *error = nil;
     id object = [NSJSONSerialization
                  JSONObjectWithData:returnedData
@@ -177,7 +176,6 @@
 
 - (void)fetchComments
 {
-    NSLog(@"Fetching comments");
     NSString* urlString = [[@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:videoID] stringByAppendingString:@"/comments?v=2"];
     NSURL *url = [NSURL URLWithString:urlString];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -215,7 +213,6 @@
                     
                     i++;
                 }
-                NSLog(@"comments loaded");
                 [self correctLayout];
             }];
         }
@@ -234,13 +231,22 @@
     [commentTable insertRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
     
     UITableViewCell* cell = [commentTableController tableView:commentTable cellForRowAtIndexPath:indexPath];
-    CGSize size = [commentText sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(cell.frame.size.width - 20, 500)];
-    commentTableController.totalRowHeight += size.height+35;
+    
+    CGSize maximumLabelSize = CGSizeMake(cell.frame.size.width - 20, MAXFLOAT);
+    
+    NSStringDrawingOptions options = NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin;
+    
+    NSDictionary *attr = @{NSFontAttributeName: [UIFont systemFontOfSize:13]};
+    CGRect size = [commentText boundingRectWithSize:maximumLabelSize
+                                                   options:options
+                                                attributes:attr
+                                                   context:nil];
+    //CGSize size = [commentText sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(cell.frame.size.width - 20, 500)];
+    commentTableController.totalRowHeight += ceilf(size.size.height)+35;
 }
 
 - (void)correctLayout
 {
-    NSLog(@"correcting layout");
     
     [descriptionWebView setFrame:CGRectMake(descriptionWebView.frame.origin.x, descriptionWebView.frame.origin.y, commentTextField.frame.size.width, descriptionWebView.frame.size.height)];
     // Fit description label to text size
@@ -295,7 +301,6 @@
                     auth:(GTMOAuth2Authentication *)auth
                    error:(NSError *)error
 {
-    NSLog(@"Check if video liked");
     Globals* globals = [Globals getInstance];
     GTLServiceYouTube *service = YouTube.youTubeService;
     service.shouldFetchNextPages = FALSE;
@@ -306,10 +311,9 @@
     
     [service executeQuery:query2 completionHandler:^(GTLServiceTicket *ticket2, GTLYouTubePlaylistItemListResponse *videoList, NSError *error2)
     {
-        NSLog(@"done checking video liked");
         if([[videoList items] count] > 0)
         {
-            NSLog(@"%@", [[[videoList items] objectAtIndex:0] identifier]);
+            //NSLog(@"%@", [[[videoList items] objectAtIndex:0] identifier]);
             likeButton.enabled = false;
         }
         else
@@ -321,7 +325,6 @@
 
 -(IBAction)likeVideo:(id)sender
 {
-    NSLog(@"like video");
     [YouTube authenticateThen: @selector(likeVideoAuthenticated:auth:error:) delegate:self viewController:self];
 }
 
@@ -351,7 +354,6 @@
     [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
     {
         GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
-        NSLog(@"%@", videoEntry.comment.feedLink.URL);
         GDataEntryYouTubeComment *newCommentEntry = [GDataEntryYouTubeComment commentEntry];
         [newCommentEntry setContentWithString:commentTextField.text];
         [service fetchEntryByInsertingEntry:newCommentEntry forFeedURL:videoEntry.comment.feedLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
@@ -374,14 +376,12 @@
                             auth:(GTMOAuth2Authentication *)auth
                            error:(NSError *)error
 {
-    NSLog(@"Dislike video authenticated");
     GDataServiceGoogleYouTube* service = YouTube.youTubeServiceGData;
     
     NSString* videoURL = [@"https://gdata.youtube.com/feeds/api/videos/" stringByAppendingString:videoID];
     [service fetchEntryWithURL:[NSURL URLWithString:videoURL] completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *video, NSError *error)
     {
          GDataEntryYouTubeVideo* videoEntry = (GDataEntryYouTubeVideo*)video;
-         NSLog(@"%@", videoEntry.ratingsLink);
          GDataEntryYouTubeRating *newRating = [GDataEntryYouTubeRating ratingEntryWithValue:@"dislike"];
          [service fetchEntryByInsertingEntry:newRating forFeedURL:videoEntry.ratingsLink.URL completionHandler:^(GDataServiceTicket *ticket, GDataEntryBase *entry, NSError *error)
          {
@@ -402,7 +402,6 @@
                          auth:(GTMOAuth2Authentication *)auth
                         error:(NSError *)error
 {
-    NSLog(@"Like video authenticated");
     Globals* globals = [Globals getInstance];
     GTLYouTubePlaylistItem *playlistItem = [[GTLYouTubePlaylistItem alloc] init];
     playlistItem.snippet = [[GTLYouTubePlaylistItemSnippet alloc] init];

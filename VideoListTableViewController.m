@@ -7,6 +7,7 @@
 //
 
 #import "VideoListTableViewController.h"
+#import "VideoListViewController.h"
 
 @implementation VideoListTableViewController
 
@@ -24,6 +25,7 @@
 
     VideoEntryViewController *controller = [[VideoEntryViewController alloc] initWithNibName:@"VideoEntryViewController" bundle:[NSBundle mainBundle]];
 	controller.entry = entry;
+    
 	[[parent navigationController] pushViewController:controller animated:YES];
 }
 

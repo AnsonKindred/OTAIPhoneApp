@@ -34,5 +34,5 @@
 
 + (Boolean) canAuthorize;
 
-+ (EntrySession*) parseVideo:(GDataXMLElement*)video;
+//+ (EntrySession*) parseVideo:(GDataXMLElement*)video;
 @end
