@@ -110,7 +110,7 @@
         [self correctLayout];
     }
 }
-
+bool descriptionIsEmpty = false;
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     NSData* returnedData = [request responseData];
@@ -131,16 +131,24 @@
     {
         NSDictionary *result = object;
         
-        
-        NSString* descriptionHTML = [NSString stringWithFormat:@"<html> \n"
+        if(![[result valueForKey:@"description"] isEqualToString:@""])
+        {
+            descriptionIsEmpty = false;
+            NSString* descriptionHTML = [NSString stringWithFormat:@"<html> \n"
                                        "<head> \n"
                                        "<style type=\"text/css\"> \n"
                                        "body {font-family: \"%@\"; font-size: %@;}\n"
                                        "</style> \n"
                                        "</head> \n"
                                        "<body>%@</body> \n"
-                                       "</html>", [UIFont fontWithName:@"Helvetica" size:12].familyName, [NSNumber numberWithInt:12], [result valueForKey:@"description"]];
-        [descriptionWebView loadHTMLString:descriptionHTML baseURL:nil];
+                                       "</html>", [UIFont fontWithName:@"Helvetica" size:13].familyName, [NSNumber numberWithInt:13], [result valueForKey:@"description"]];
+            [descriptionWebView loadHTMLString:descriptionHTML baseURL:nil];
+        }
+        else
+        {
+            descriptionIsEmpty = true;
+            NSLog(@"description empty");
+        }
         
     }
     else
@@ -247,11 +255,17 @@
 
 - (void)correctLayout
 {
-    
-    [descriptionWebView setFrame:CGRectMake(descriptionWebView.frame.origin.x, descriptionWebView.frame.origin.y, commentTextField.frame.size.width, descriptionWebView.frame.size.height)];
-    // Fit description label to text size
-    [descriptionWebView sizeToFit];
-    
+    if (descriptionIsEmpty)
+    {
+        [infoLabelView setFrame:CGRectMake(infoLabelView.frame.origin.x, infoLabelView.frame.origin.y, commentTextField.frame.size.width, 0)];
+        [descriptionWebView setFrame:CGRectMake(descriptionWebView.frame.origin.x, infoLabelView.frame.origin.y, commentTextField.frame.size.width, 0)];
+    }
+    else
+    {
+        [descriptionWebView setFrame:CGRectMake(descriptionWebView.frame.origin.x, descriptionWebView.frame.origin.y, commentTextField.frame.size.width, descriptionWebView.frame.size.height)];
+        // Fit description label to text size
+        [descriptionWebView sizeToFit];
+    }
     
     if (videosListByArtistViewController.entries.count > 0)
     {

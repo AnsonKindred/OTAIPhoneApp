@@ -33,9 +33,8 @@
 		}
 	}
     
-    // Clear application badge when app launched
+    // Clear application badge when app launches
     application.applicationIconBadgeNumber = 0;
-
     
     // Enable caching
     [ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];

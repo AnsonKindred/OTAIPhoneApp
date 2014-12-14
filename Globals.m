@@ -24,7 +24,7 @@ static Globals *instance = nil;
         {
             instance= [Globals new];
             instance.CHANNEL_ID = @"UCJ0MDVTDD_8ryFEleEiZwsw";
-            instance.wordpressDomain = @"http://ota.zebadiah.me/services/";
+            instance.wordpressDomain = @"http://www.offtheavenue.tv/services/";
         }
     }
     return instance;
