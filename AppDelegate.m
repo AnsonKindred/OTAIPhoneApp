@@ -118,7 +118,7 @@
     
 	// Get the users Device Model, Display Name, Unique ID, Token & Version Number
 	UIDevice *dev = [UIDevice currentDevice];
-	NSString *deviceUuid = dev.uniqueIdentifier;
+	NSString *deviceUuid = [[dev identifierForVendor] UUIDString];
     NSString *deviceName = dev.name;
 	NSString *deviceModel = dev.model;
 	NSString *deviceSystemVersion = dev.systemVersion;
@@ -132,7 +132,7 @@
 	// Build URL String for Registration
 	// !!! CHANGE "www.mywebsite.com" TO YOUR WEBSITE. Leave out the http://
 	// !!! SAMPLE: "secure.awesomeapp.com"
-	NSString *host = "ota.zebadiah.me";
+	NSString *host = @"ota.zebadiah.me";
     
 	// !!! CHANGE "/apns.php?" TO THE PATH TO WHERE apns.php IS INSTALLED
 	// !!! ( MUST START WITH / AND END WITH ? ).
